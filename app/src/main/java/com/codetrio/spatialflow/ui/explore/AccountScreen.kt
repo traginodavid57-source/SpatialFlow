@@ -63,6 +63,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -70,6 +71,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.data.innertube.AccountManager
 import com.codetrio.spatialflow.data.innertube.OnlineSong
 import com.codetrio.spatialflow.data.innertube.UserProfile
@@ -101,10 +103,10 @@ fun AccountScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = { Text("Account Settings", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.account_settings), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -140,7 +142,7 @@ fun AccountSettingsSection(
     val context = LocalContext.current
     val isLoggedIn = remember(userProfile) { AccountManager.isLoggedIn(context) }
     val accountName = userProfile?.name ?: AccountManager.getAccountName(context)
-    val token = remember { AccountManager.getAuthCookie(context) ?: "No persistent credentials detected" }
+    val token = remember { AccountManager.getAuthCookie(context) ?: context.getString(R.string.no_persistent_credentials_detected) }
     
     var syncEnabled by remember { mutableStateOf(AccountManager.isSyncEnabled(context)) }
     var showTokenAlert by remember { mutableStateOf(false) }
@@ -231,7 +233,7 @@ fun AccountSettingsSection(
                         if (isLoggedIn && !userProfile?.avatarUrl.isNullOrEmpty()) {
                             AsyncImage(
                                 model = userProfile.avatarUrl,
-                                contentDescription = "Profile Picture",
+                                contentDescription = stringResource(R.string.profile_picture),
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )
@@ -254,7 +256,7 @@ fun AccountSettingsSection(
                 )
                 if (isLoggedIn) {
                     Text(
-                        text = userProfile?.email ?: "YouTube Music Connected",
+                        text = userProfile?.email ?: stringResource(R.string.youtube_music_connected),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(top = 4.dp)
@@ -267,7 +269,7 @@ fun AccountSettingsSection(
             item {
                 Column {
                     Text(
-                        text = "Recent Listening History", 
+                        text = stringResource(R.string.recent_listening_history), 
                         style = MaterialTheme.typography.titleLarge, 
                         fontWeight = FontWeight.Bold, 
                         modifier = Modifier.padding(bottom = 12.dp)
@@ -343,8 +345,8 @@ fun AccountSettingsSection(
                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
                     content = {
                         Column {
-                            Text("Sync Playlists", fontWeight = FontWeight.Medium, style = MaterialTheme.typography.titleMedium)
-                            Text("Auto-update library states with remote servers", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(stringResource(R.string.sync_playlists), fontWeight = FontWeight.Medium, style = MaterialTheme.typography.titleMedium)
+                            Text(stringResource(R.string.auto_update_library_states_with_remote_servers), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 )
@@ -356,8 +358,8 @@ fun AccountSettingsSection(
                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
                     content = {
                         Column {
-                            Text("Diagnostics Tool", fontWeight = FontWeight.Medium, style = MaterialTheme.typography.titleMedium)
-                            Text("Inspect background security context", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(stringResource(R.string.diagnostics_tool), fontWeight = FontWeight.Medium, style = MaterialTheme.typography.titleMedium)
+                            Text(stringResource(R.string.inspect_background_security_context), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 )
@@ -379,7 +381,7 @@ fun AccountSettingsSection(
                 ) {
                     Icon(Icons.Default.PowerSettingsNew, null)
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text("Disconnect Account", fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.disconnect_account), fontWeight = FontWeight.Bold)
                 }
             } else {
                 Button(
@@ -393,7 +395,7 @@ fun AccountSettingsSection(
                 ) {
                     Icon(Icons.AutoMirrored.Filled.Login, null)
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text("Sign In to YouTube Music", fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.sign_in_to_youtube_music), fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -402,10 +404,10 @@ fun AccountSettingsSection(
     if (showTokenAlert) {
         AlertDialog(
             onDismissRequest = { showTokenAlert = false },
-            title = { Text("Authentication Signature") },
+            title = { Text(stringResource(R.string.authentication_signature)) },
             text = { Text(token, fontSize = 11.sp, style = MaterialTheme.typography.labelSmall) },
             confirmButton = {
-                TextButton(onClick = { showTokenAlert = false }) { Text("Done") }
+                TextButton(onClick = { showTokenAlert = false }) { Text(stringResource(R.string.done)) }
             }
         )
     }

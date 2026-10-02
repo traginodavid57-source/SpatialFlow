@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,7 +86,7 @@ fun TelegramJoinDialog(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
+                    contentDescription = stringResource(R.string.close),
                     tint = Color.White.copy(alpha = 0.6f),
                     modifier = Modifier.size(20.dp)
                 )
@@ -104,7 +105,7 @@ fun TelegramJoinDialog(
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = "COMMUNITY",
+                        text = stringResource(R.string.community),
                         color = Color(0xFF50B5FF),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
@@ -124,7 +125,7 @@ fun TelegramJoinDialog(
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(
-                            text = "Join our Telegram Group",
+                            text = stringResource(R.string.join_our_telegram_group),
                             fontWeight = FontWeight.ExtraBold,
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
@@ -134,7 +135,7 @@ fun TelegramJoinDialog(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text = "Get the latest updates, request features, report bugs, and chat with our active developer community!",
+                            text = stringResource(R.string.get_the_latest_updates_request_features_report_bugs_and_chat_with_our_active_developer_community_),
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color(0xFFBBE1FA), // Soft blue-grey text color for better contrast
                             lineHeight = 20.sp
@@ -176,7 +177,7 @@ fun TelegramJoinDialog(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_telegram_plane),
-                                contentDescription = "Telegram Logo",
+                                contentDescription = stringResource(R.string.telegram_logo),
                                 tint = Color.White,
                                 modifier = Modifier
                                     .size(36.dp)
@@ -199,7 +200,7 @@ fun TelegramJoinDialog(
                         modifier = Modifier.padding(end = 8.dp)
                     ) {
                         Text(
-                            text = "Later",
+                            text = stringResource(R.string.later),
                             color = Color.White.copy(alpha = 0.6f),
                             fontWeight = FontWeight.SemiBold
                         )
@@ -227,7 +228,7 @@ fun TelegramJoinDialog(
                             .padding(horizontal = 20.dp)
                     ) {
                         Text(
-                            text = "Join Group",
+                            text = stringResource(R.string.join_group),
                             fontWeight = FontWeight.Bold
                         )
                     }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import com.codetrio.spatialflow.R
 
 object TelegramHelper {
     
@@ -41,7 +42,7 @@ object TelegramHelper {
                 }
                 context.startActivity(fallbackIntent)
             } catch (ex: Exception) {
-                Toast.makeText(context, "Could not open browser for Telegram link", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.could_not_open_browser_for_telegram_link), Toast.LENGTH_SHORT).show()
             }
         }
     }

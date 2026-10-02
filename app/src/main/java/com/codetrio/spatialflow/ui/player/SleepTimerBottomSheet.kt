@@ -58,10 +58,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLocale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.viewmodel.PlayerSharedViewModel
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
@@ -118,7 +120,7 @@ fun SleepTimerBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Sleep Timer",
+                text = stringResource(R.string.setting_sleep_timer),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -151,11 +153,11 @@ fun SleepTimerBottomSheet(
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             val activeText = when (sleepTimerMode) {
-                                PlayerSharedViewModel.SleepTimerMode.END_OF_SONG -> "Active: Stop at end of current song"
-                                PlayerSharedViewModel.SleepTimerMode.END_OF_QUEUE -> "Active: Stop at end of queue"
+                                PlayerSharedViewModel.SleepTimerMode.END_OF_SONG -> stringResource(R.string.active_stop_at_end_of_current_song)
+                                PlayerSharedViewModel.SleepTimerMode.END_OF_QUEUE -> stringResource(R.string.active_stop_at_end_of_queue)
                                 PlayerSharedViewModel.SleepTimerMode.CUSTOM -> {
                                     val timeStr = String.format(LocalLocale.current.platformLocale, "%02d:%02d", remainingMinutes, remainingSeconds)
-                                    "Countdown: $timeStr remaining"
+                                    stringResource(R.string.countdown_remaining, timeStr)
                                 }
                                 else -> ""
                             }
@@ -201,7 +203,7 @@ fun SleepTimerBottomSheet(
                                 },
                                 headlineContent = {
                                     Text(
-                                        text = "Set Hours (${sliderValue.roundToInt()}h)",
+                                        text = stringResource(R.string.set_hours, sliderValue.roundToInt()),
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.Bold
                                     )
@@ -272,7 +274,7 @@ fun SleepTimerBottomSheet(
                         },
                         content = {
                             Text(
-                                text = "Stop at end of track",
+                                text = stringResource(R.string.stop_at_end_of_track),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -317,9 +319,9 @@ fun SleepTimerBottomSheet(
                         .weight(1f)
                         .height(48.dp)
                 ) {
-                    Icon(Icons.Default.Close, contentDescription = "Cancel Timer", modifier = Modifier.size(18.dp))
+                    Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel_timer), modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Cancel", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.cancel), fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 }
 
                 Spacer(modifier = Modifier.width(2.dp))
@@ -341,9 +343,9 @@ fun SleepTimerBottomSheet(
                         .weight(1f)
                         .height(48.dp)
                 ) {
-                    Icon(Icons.Default.Edit, contentDescription = "Custom Timer", modifier = Modifier.size(18.dp))
+                    Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.custom_timer), modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Custom", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.custom), fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -365,16 +367,16 @@ fun SleepTimerBottomSheet(
                     }
                     showTimePicker = false
                 }) {
-                    Text("Set", fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.set), fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showTimePicker = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             },
             title = {
-                Text("Select Duration", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.select_duration), style = MaterialTheme.typography.titleMedium)
             },
             text = {
                 Box(

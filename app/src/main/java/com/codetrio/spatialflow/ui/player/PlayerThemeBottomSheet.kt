@@ -27,9 +27,11 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.codetrio.spatialflow.R
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -50,7 +52,7 @@ fun PlayerThemeBottomSheet(
                 .padding(bottom = 24.dp)
         ) {
             Text(
-                text = "Player Theme",
+                text = stringResource(R.string.player_theme),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -63,14 +65,14 @@ fun PlayerThemeBottomSheet(
                     .clickable { onThemeSelect("fluid") },
                 headlineContent = {
                     Text(
-                        text = "Fluid Theme",
+                        text = stringResource(R.string.fluid_theme),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold
                     )
                 },
                 supportingContent = {
                     Text(
-                        text = "Organic mesh gradient with drifting colors and video motion art when available.",
+                        text = stringResource(R.string.organic_mesh_gradient_with_drifting_colors_and_video_motion_art_when_available_),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -97,14 +99,14 @@ fun PlayerThemeBottomSheet(
                     .clickable { onThemeSelect("static") },
                 headlineContent = {
                     Text(
-                        text = "Static Theme",
+                        text = stringResource(R.string.static_theme),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold
                     )
                 },
                 supportingContent = {
                     Text(
-                        text = "Single solid background color with video motion art when available.",
+                        text = stringResource(R.string.single_solid_background_color_with_video_motion_art_when_available_),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -129,9 +131,9 @@ fun PlayerThemeBottomSheet(
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
-                Icon(Icons.Default.Close, contentDescription = "Close Theme Selector", modifier = Modifier.size(18.dp))
+                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.close_theme_selector), modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Close", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.close), fontSize = 15.sp, fontWeight = FontWeight.Bold)
             }
         }
     }

@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.codetrio.spatialflow.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,14 +66,14 @@ fun CrashReportDialog(
         icon = {
             Icon(
                 imageVector = Icons.Default.Warning,
-                contentDescription = "Warning",
+                contentDescription = stringResource(R.string.warning),
                 tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier.size(36.dp)
             )
         },
         title = {
             Text(
-                text = "App Crash Detected",
+                text = stringResource(R.string.app_crash_detected),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface
@@ -81,7 +82,7 @@ fun CrashReportDialog(
         text = {
             Column {
                 Text(
-                    text = "SpatialFlow crashed unexpectedly during your last session. Would you like to report this issue to help us fix it?",
+                    text = stringResource(R.string.spatialflow_crashed_unexpectedly_during_your_last_session_would_you_like_to_report_this_issue_to_help_us_fix_it_),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -97,7 +98,7 @@ fun CrashReportDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (showDetails) "Hide technical details" else "Show technical details",
+                        text = if (showDetails) stringResource(R.string.hide_technical_details) else stringResource(R.string.show_technical_details),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.SemiBold,
@@ -160,7 +161,7 @@ fun CrashReportDialog(
                             val clipboardManager = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
                             val clip = android.content.ClipData.newPlainText("Crash Report", telegramMsg)
                             clipboardManager.setPrimaryClip(clip)
-                            Toast.makeText(context, "Crash log copied. Paste in Telegram.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, context.getString(R.string.crash_log_copied_paste_in_telegram), Toast.LENGTH_LONG).show()
                             com.codetrio.spatialflow.util.TelegramHelper.openTelegram(context = context, domain = "SpatialFlow")
                         }
                         onReport()
@@ -200,7 +201,7 @@ fun CrashReportDialog(
                             }
                             context.startActivity(intent)
                         } catch (e: Exception) {
-                            Toast.makeText(context, "Could not open browser to submit issue", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.could_not_open_browser_to_submit_issue), Toast.LENGTH_SHORT).show()
                         }
                         onReport()
                     },
@@ -221,7 +222,7 @@ fun CrashReportDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

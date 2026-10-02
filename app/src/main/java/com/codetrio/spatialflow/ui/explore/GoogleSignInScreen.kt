@@ -15,8 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.viewinterop.AndroidView
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.data.innertube.YouTubeMusic
 import com.codetrio.spatialflow.viewmodel.AccountViewModel
 import kotlinx.coroutines.launch
@@ -38,10 +40,10 @@ fun GoogleSignInScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Sign In with Google", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.sign_in_with_google), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 }
             )
@@ -73,10 +75,10 @@ fun GoogleSignInScreen(
                                         
                                         // Fetch user profile to get username
                                         val result = YouTubeMusic.accountProfile()
-                                        val username = result.getOrNull()?.name ?: "Connected User"
+                                        val username = result.getOrNull()?.name ?: ctx.getString(R.string.connected_user)
                                         
                                         if (!isOnboarding) {
-                                            com.codetrio.spatialflow.ui.SnackbarController.showMessage("Login Successful: $username")
+                                            com.codetrio.spatialflow.ui.SnackbarController.showMessage(ctx.getString(R.string.login_successful_, username))
                                         }
                                         onSignInSuccess()
                                     }

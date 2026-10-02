@@ -100,6 +100,7 @@ import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -113,6 +114,7 @@ import androidx.graphics.shapes.toPath
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.data.innertube.HomeSection
 import com.codetrio.spatialflow.data.innertube.OnlineAlbum
 import com.codetrio.spatialflow.data.innertube.OnlineArtist
@@ -477,7 +479,7 @@ fun HomeFeedSkeleton() {
 fun WelcomeGreetingBanner(userName: String?) {
     val hour = remember { java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY) }
     val greeting = remember(hour) {
-        when (hour) { in 0..11 -> "Good Morning"; in 12..16 -> "Good Afternoon"; else -> "Good Evening" }
+        when (hour) { in 0..11 -> R.string.good_morning; in 12..16 -> R.string.good_afternoon; else -> R.string.good_evening }
     }
     val iconResId = remember(hour) {
         when (hour) {
@@ -486,7 +488,7 @@ fun WelcomeGreetingBanner(userName: String?) {
             else -> com.codetrio.spatialflow.R.drawable.ic_evening
         }
     }
-    val name = if (!userName.isNullOrBlank()) userName else "Listener"
+    val name = if (!userName.isNullOrBlank()) userName else stringResource(R.string.listener)
 
     Column(
         modifier = Modifier
@@ -502,7 +504,7 @@ fun WelcomeGreetingBanner(userName: String?) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = greeting,
+                text = stringResource(greeting),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -591,7 +593,7 @@ fun TopResultCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
-                        contentDescription = "More Options",
+                        contentDescription = stringResource(R.string.more_options),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -623,13 +625,13 @@ fun TopResultCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Person,
-                            contentDescription = "Go to Profile",
+                            contentDescription = stringResource(R.string.go_to_profile),
                             tint = Color.Black,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Go to Profile",
+                            text = stringResource(R.string.go_to_profile),
                             style = MaterialTheme.typography.labelLarge.copy(
                                 fontWeight = FontWeight.Bold
                             ),
@@ -652,13 +654,13 @@ fun TopResultCard(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.PlayArrow,
-                            contentDescription = "Play",
+                            contentDescription = stringResource(R.string.play),
                             tint = Color.Black,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Play",
+                            text = stringResource(R.string.play),
                             style = MaterialTheme.typography.labelLarge.copy(
                                 fontWeight = FontWeight.Bold
                             ),
@@ -827,15 +829,15 @@ fun SearchResultItem(
                     text = when (item) {
                         is SearchItem.TopResult -> item.subtitle
                         is SearchItem.Header -> ""
-                        is SearchItem.Song -> "${item.song.artist}${item.song.duration?.let { " • $it" } ?: ""}"
-                        is SearchItem.Album -> "Album • ${item.album.artists.joinToString { it.name }}${item.album.year?.let { " • $it" } ?: ""}"
-                        is SearchItem.Artist -> "Artist${item.artist.subscriberCount?.let { count ->
+                        is SearchItem.Song -> stringResource(R.string.song_artist_duration, item.song.artist, item.song.duration?.let { " • $it" } ?: "")
+                        is SearchItem.Album -> stringResource(R.string.album_artists_year, item.album.artists.joinToString { it.name }, item.album.year?.let { " • $it" } ?: "")
+                        is SearchItem.Artist -> stringResource(R.string.artist_subscriber_count, item.artist.subscriberCount?.let { count ->
                             val clean = count.replace("Spotify", "", ignoreCase = true)
                                 .replace("Monthly Monthly Listeners", "Monthly Listeners", ignoreCase = true)
                                 .trim()
                             if (clean.isNotEmpty()) " • $clean" else ""
-                        } ?: ""}"
-                        is SearchItem.Playlist -> "Playlist${item.playlist.songCount?.let { " • $it songs" } ?: ""}"
+                        } ?: "")
+                        is SearchItem.Playlist -> stringResource(R.string.playlist_songs_count, item.playlist.songCount?.let { " • $it songs" } ?: "")
                     },
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -868,7 +870,7 @@ fun SearchResultItem(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.MoreVert,
-                                contentDescription = "More Options",
+                                contentDescription = stringResource(R.string.more_options),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(20.dp)
                             )
@@ -920,8 +922,8 @@ fun BentoCell(
         is SearchItem.Header -> ""
         is SearchItem.Song -> item.song.artist
         is SearchItem.Album -> item.album.artists.joinToString { it.name }
-        is SearchItem.Artist -> "Artist"
-        is SearchItem.Playlist -> item.playlist.author?.name ?: "Playlist"
+        is SearchItem.Artist -> stringResource(R.string.field_artist)
+        is SearchItem.Playlist -> item.playlist.author?.name ?: stringResource(R.string.playlist)
     }
     val thumbnailUrl = when (item) {
         is SearchItem.TopResult -> item.thumbnailUrl
@@ -970,7 +972,7 @@ fun BentoCell(
                         modifier = Modifier.padding(bottom = 8.dp)
                     ) {
                         Text(
-                            text = "Feature",
+                            text = stringResource(R.string.feature),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Black,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -1046,7 +1048,7 @@ fun HomeSectionRow(
                             contentColor = MaterialTheme.colorScheme.onBackground
                         )
                     ) {
-                        Text("Play all", style = MaterialTheme.typography.labelSmall)
+                        Text(stringResource(R.string.play_all), style = MaterialTheme.typography.labelSmall)
                     }
                 }
                 
@@ -1058,7 +1060,7 @@ fun HomeSectionRow(
                     ) {
                         Icon(
                             imageVector = Icons.Default.ChevronRight,
-                            contentDescription = "See All",
+                            contentDescription = stringResource(R.string.see_all_title),
                             tint = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.size(24.dp)
                         )
@@ -1246,8 +1248,8 @@ fun HomeSectionRow(
                             is SearchItem.Album -> item.album.artists.joinToString { it.name }
                             is SearchItem.Artist -> item.artist.subscriberCount?.replace("Spotify", "", ignoreCase = true)
                                 ?.replace("Monthly Monthly Listeners", "Monthly Listeners", ignoreCase = true)
-                                ?.trim() ?: "Artist"
-                            is SearchItem.Playlist -> item.playlist.author?.name ?: "Playlist"
+                                ?.trim() ?: stringResource(R.string.field_artist)
+                            is SearchItem.Playlist -> item.playlist.author?.name ?: stringResource(R.string.playlist)
                         }
                         val thumbnailUrl = when (item) {
                             is SearchItem.TopResult -> item.thumbnailUrl
@@ -1258,8 +1260,8 @@ fun HomeSectionRow(
                             is SearchItem.Playlist -> item.playlist.thumbnailUrl
                         }
                         val promptText = when (item) {
-                            is SearchItem.Song -> "Because you liked ${item.song.artist}"
-                            else -> "Handpicked based on your interests"
+                            is SearchItem.Song -> stringResource(R.string.because_you_liked, item.song.artist)
+                            else -> stringResource(R.string.handpicked_based_on_your_interests)
                         }
 
                         Box(
@@ -1594,7 +1596,7 @@ fun HomeSongListItem(
             )
         }
         IconButton(onClick = onMenuClick) {
-            Icon(Icons.Default.MoreVert, "More", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            Icon(Icons.Default.MoreVert, stringResource(R.string.more), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -1709,13 +1711,13 @@ fun OnlineSongBottomSheet(
                         favoritesManager.setFavorite(song.videoId.hashCode().toLong(), target)
                         isFavorite = target
                         com.codetrio.spatialflow.ui.SnackbarController.showMessage(
-                            if (target) "Added to library" else "Removed from library"
+                            if (target) context.getString(R.string.added_to_library) else context.getString(R.string.removed_from_library)
                         )
                     }
                 ) {
                     Icon(
                         imageVector = if (isFavorite) Icons.Filled.ThumbUp else Icons.Filled.ThumbUpOffAlt,
-                        contentDescription = "Like",
+                        contentDescription = stringResource(R.string.like),
                         tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(22.dp)
                     )
@@ -1724,7 +1726,7 @@ fun OnlineSongBottomSheet(
                 IconButton(onClick = onDismissRequest) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
+                        contentDescription = stringResource(R.string.close),
                         modifier = Modifier.size(22.dp)
                     )
                 }
@@ -1745,7 +1747,7 @@ fun OnlineSongBottomSheet(
                         .clickable {
                             playerSharedViewModel.addToQueueNext(onlineSongItem)
                             exploreViewModel.addToQueueNext(song)
-                            com.codetrio.spatialflow.ui.SnackbarController.showMessage("Playing next: ${song.title}")
+                            com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.playing_next, song.title))
                             onDismissRequest()
                         }
                         .padding(bottom = 4.dp),
@@ -1766,7 +1768,7 @@ fun OnlineSongBottomSheet(
                             modifier = Modifier.size(24.dp)
                         )
                     }
-                    Text("Play next", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
+                    Text(stringResource(R.string.play_next), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
                 }
 
                 // Card 2: Share
@@ -1777,10 +1779,10 @@ fun OnlineSongBottomSheet(
                         .clickable {
                             val shareIntent = android.content.Intent().apply {
                                 action = android.content.Intent.ACTION_SEND
-                                putExtra(android.content.Intent.EXTRA_TEXT, "Check out ${song.title} by ${song.artist}: https://music.youtube.com/watch?v=${song.videoId}")
+                                putExtra(android.content.Intent.EXTRA_TEXT, context.getString(R.string.share_song_text, song.title, song.artist, song.videoId))
                                 type = "text/plain"
                             }
-                            context.startActivity(android.content.Intent.createChooser(shareIntent, "Share via"))
+                            context.startActivity(android.content.Intent.createChooser(shareIntent, context.getString(R.string.share_via)))
                             onDismissRequest()
                         }
                         .padding(bottom = 4.dp),
@@ -1801,7 +1803,7 @@ fun OnlineSongBottomSheet(
                             modifier = Modifier.size(24.dp)
                         )
                     }
-                    Text("Share", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
+                    Text(stringResource(R.string.share), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
                 }
             }
 
@@ -1809,38 +1811,38 @@ fun OnlineSongBottomSheet(
 
             // Optimized 2-Pane Actions for Landscape Width
             val menuItems = listOf(
-                Triple("Start mix", Icons.Default.Radio) {
+                Triple(stringResource(R.string.start_mix), Icons.Default.Radio) {
                     exploreViewModel.playOnlineSongWithQueue(song, emptyList(), 0)
-                    com.codetrio.spatialflow.ui.SnackbarController.showMessage("Starting mix based on ${song.title}")
+                    com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.starting_mix_based_on, song.title))
                     onDismissRequest()
                 },
-                Triple("Add to queue", Icons.AutoMirrored.Filled.PlaylistPlay) {
+                Triple(stringResource(R.string.add_to_queue), Icons.AutoMirrored.Filled.PlaylistPlay) {
                     playerSharedViewModel.addToQueue(onlineSongItem)
                     exploreViewModel.addToQueueLast(song)
                     com.codetrio.spatialflow.ui.SnackbarController.showMessage(
-                        "Added to queue",
+                        context.getString(R.string.added_to_queue),
                         iconVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.PlaylistAdd
                     )
                     onDismissRequest()
                 },
-                Triple("Add to playlist", Icons.AutoMirrored.Filled.PlaylistAdd) {
+                Triple(stringResource(R.string.add_to_playlist_2), Icons.AutoMirrored.Filled.PlaylistAdd) {
                     onPlaylistAddClick(onlineSongItem)
                     onDismissRequest()
                 },
-                Triple("Download", Icons.Default.Download) {
+                Triple(stringResource(R.string.download), Icons.Default.Download) {
                     SongDownloader.downloadSong(context, onlineSongItem)
                     onDismissRequest()
                 },
-                Triple("Go to album", Icons.Default.Album) {
+                Triple(stringResource(R.string.go_to_album), Icons.Default.Album) {
                     val id = song.albumId
                     if (!id.isNullOrBlank()) {
                         exploreViewModel.loadAlbum(id)
                         onDismissRequest()
                     } else {
-                        com.codetrio.spatialflow.ui.SnackbarController.showMessage("Album information unavailable")
+                        com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.album_information_unavailable))
                     }
                 },
-                Triple("Go to artist", Icons.Default.Person) {
+                Triple(stringResource(R.string.go_to_artist), Icons.Default.Person) {
                     val aId = song.artistId
                     if (!aId.isNullOrBlank()) {
                         exploreViewModel.loadArtist(aId)
@@ -1850,22 +1852,22 @@ fun OnlineSongBottomSheet(
                         onDismissRequest()
                     }
                 },
-                Triple("View song credits", Icons.Default.Groups) {
+                Triple(stringResource(R.string.view_song_credits), Icons.Default.Groups) {
                     onViewCreditsClick(song)
                     onDismissRequest()
                 },
                 Triple(
-                    if (isPinned) "Unpin from Speed dial" else "Pin to Speed dial",
+                    if (isPinned) stringResource(R.string.unpin_from_speed_dial) else stringResource(R.string.pin_to_speed_dial),
                     Icons.Default.PushPin
                 ) {
                     exploreViewModel.pinToSpeedDial(song)
-                    val msg = if (isPinned) "Song removed from Speed Dial!" else "Song pinned to Speed Dial!"
+                    val msg = if (isPinned) context.getString(R.string.song_removed_from_speed_dial_) else context.getString(R.string.song_pinned_to_speed_dial_)
                     com.codetrio.spatialflow.ui.SnackbarController.showMessage(msg)
                     onDismissRequest()
                 },
-                Triple("Not interested", Icons.Default.Block) {
+                Triple(stringResource(R.string.not_interested), Icons.Default.Block) {
                     exploreViewModel.setNotInterested(song)
-                    com.codetrio.spatialflow.ui.SnackbarController.showMessage("We will suggest fewer songs like this")
+                    com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.we_will_suggest_fewer_songs_like_this))
                     onDismissRequest()
                 }
             )
@@ -1930,8 +1932,8 @@ fun CommunityExpressiveCard(
         is SearchItem.Header -> ""
         is SearchItem.Song -> item.song.artist
         is SearchItem.Album -> item.album.artists.firstOrNull()?.name ?: ""
-        is SearchItem.Artist -> "Artist"
-        is SearchItem.Playlist -> item.playlist.author?.name ?: "Community Curator"
+        is SearchItem.Artist -> stringResource(R.string.field_artist)
+        is SearchItem.Playlist -> item.playlist.author?.name ?: stringResource(R.string.community_curator)
     }
     val songCount = when (item) {
         is SearchItem.Playlist -> item.playlist.songCount?.let { "$it" } ?: ""
@@ -2078,7 +2080,7 @@ fun CommunityExpressiveCard(
                         ) {
                             Icon(
                                 painter = androidx.compose.ui.res.painterResource(id = com.codetrio.spatialflow.R.drawable.ic_radio),
-                                contentDescription = "Radio",
+                                contentDescription = stringResource(R.string.radio),
                                 tint = Color.White.copy(alpha = 0.9f),
                                 modifier = Modifier.size(20.dp)
                             )
@@ -2091,7 +2093,7 @@ fun CommunityExpressiveCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.BookmarkBorder, 
-                                contentDescription = "Save",
+                                contentDescription = stringResource(R.string.save),
                                 tint = Color.White.copy(alpha = 0.9f),
                                 modifier = Modifier.size(22.dp)
                             )
@@ -2114,7 +2116,7 @@ fun CommunityExpressiveCard(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.PlayArrow, 
-                            contentDescription = "Play",
+                            contentDescription = stringResource(R.string.play),
                             tint = Color.White,
                             modifier = Modifier.size(32.dp)
                         )

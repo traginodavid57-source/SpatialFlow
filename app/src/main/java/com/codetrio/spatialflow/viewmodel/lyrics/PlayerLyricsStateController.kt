@@ -2,6 +2,8 @@ package com.codetrio.spatialflow.viewmodel.lyrics
 
 import android.content.Context
 import android.util.Log
+import com.codetrio.spatialflow.R
+import com.codetrio.spatialflow.SpatialFlowApplication
 import com.codetrio.spatialflow.data.lyrics.LrcParser
 import com.codetrio.spatialflow.data.lyrics.LyricLine
 import com.codetrio.spatialflow.data.lyrics.LyricsRepository
@@ -90,7 +92,7 @@ class PlayerLyricsStateController(private val logTag: String) {
         _selectedProvider.value = null
 
         setLyricsState(LyricsState.FETCHING)
-        _statusMessage.value = "Searching for lyrics..."
+        _statusMessage.value = context.getString(R.string.searching_for_lyrics_)
 
         repository.fetchLyrics(
             song.title,
@@ -101,7 +103,7 @@ class PlayerLyricsStateController(private val logTag: String) {
             createCallback(
                 requestTrackKey = trackKey,
                 keepExistingLyricsOnNotFound = true,
-                instrumentalMessage = "Instrumental track - no vocals",
+                instrumentalMessage = context.getString(R.string.instrumental_track_no_vocals),
                 logUpgrades = true
             ),
             song.videoId
@@ -123,7 +125,7 @@ class PlayerLyricsStateController(private val logTag: String) {
         _selectedProvider.value = null
 
         setLyricsState(LyricsState.FETCHING)
-        _statusMessage.value = "Retrying all sources..."
+        _statusMessage.value = context.getString(R.string.retrying_all_sources_)
 
         LyricsRepository.getInstance(context).retryLyrics(
             song.title,
@@ -134,7 +136,7 @@ class PlayerLyricsStateController(private val logTag: String) {
             createCallback(
                 requestTrackKey = trackKey,
                 keepExistingLyricsOnNotFound = false,
-                instrumentalMessage = "Instrumental track",
+                instrumentalMessage = context.getString(R.string.instrumental_track),
                 logUpgrades = false
             ),
             song.videoId
@@ -206,7 +208,7 @@ class PlayerLyricsStateController(private val logTag: String) {
                     _lyricsState.value = LyricsState.SUCCESS
                     _isLoading.value = false
                     _error.value = null
-                    _statusMessage.value = "Lyrics from ${result.providerName}"
+                    _statusMessage.value = SpatialFlowApplication.instance.getString(R.string.lyrics_from, result.providerName)
                 }
             }
 
@@ -219,7 +221,7 @@ class PlayerLyricsStateController(private val logTag: String) {
                     _plainLyrics.value = null
                     _lyricsState.value = LyricsState.SUCCESS
                     if (logUpgrades) {
-                        _statusMessage.value = "Upgraded to synced lyrics from ${betterResult.providerName}"
+                        _statusMessage.value = SpatialFlowApplication.instance.getString(R.string.upgraded_to_synced_lyrics_from, betterResult.providerName)
                         Log.d(logTag, "Lyrics upgraded to synced from ${betterResult.providerName}")
                     }
                 }

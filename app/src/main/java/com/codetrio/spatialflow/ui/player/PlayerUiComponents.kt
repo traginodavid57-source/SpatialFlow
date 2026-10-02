@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -114,8 +115,9 @@ internal fun SplitLikeDislikeChip(
     isDark: Boolean
 ) {
     val backgroundColor = contentColor.copy(alpha = if (isDark) 0.08f else 0.06f)
+    val likeFallbackLabel = stringResource(R.string.like)
     val displayLikesText = remember(likesCount) {
-        likesCount.ifBlank { "Like" }
+        likesCount.ifBlank { likeFallbackLabel }
     }
     
     Row(
@@ -137,7 +139,7 @@ internal fun SplitLikeDislikeChip(
         ) {
             Icon(
                 painter = painterResource(id = if (isLiked) R.drawable.ic_thumbup else R.drawable.ic_outline_thumbup),
-                contentDescription = "Like",
+                contentDescription = stringResource(R.string.like),
                 tint = if (isLiked) accentColor else contentColor.copy(alpha = 0.8f),
                 modifier = Modifier.size(18.dp)
             )
@@ -169,7 +171,7 @@ internal fun SplitLikeDislikeChip(
         ) {
             Icon(
                 painter = painterResource(id = if (isDisliked) R.drawable.ic_thumbdown else R.drawable.ic_outline_thumbdown),
-                contentDescription = "Dislike",
+                contentDescription = stringResource(R.string.dislike),
                 tint = if (isDisliked) accentColor else contentColor.copy(alpha = 0.8f),
                 modifier = Modifier.size(18.dp)
             )
@@ -438,7 +440,7 @@ internal fun LyricsMetadataFooter(
         // Lyrics provider
         if (!providerName.isNullOrBlank()) {
             Text(
-                text = "Lyrics by $providerName",
+                text = stringResource(R.string.lyrics_by, providerName),
                 style = metaStyle,
                 maxLines = 1
             )

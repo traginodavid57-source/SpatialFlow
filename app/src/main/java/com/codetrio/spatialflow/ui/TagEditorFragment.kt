@@ -67,6 +67,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -108,7 +109,7 @@ fun TagEditorScreenEntryPoint(
     ) { uri ->
         if (uri != null) {
             selectedImageUri = uri
-            com.codetrio.spatialflow.ui.SnackbarController.showMessage("Image selected")
+            com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.image_selected))
         }
     }
 
@@ -129,7 +130,7 @@ fun TagEditorScreenEntryPoint(
                     onSecurityException = { _ ->
                         pendingSaveData = Pair(title, artist)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            com.codetrio.spatialflow.ui.SnackbarController.showMessage("Please try saving again to grant permission")
+                            com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.please_try_saving_again_to_grant_permission))
                         }
                     }
                 )
@@ -163,7 +164,7 @@ fun TagEditorScreenEntryPoint(
                             intentSenderLauncher.launch(IntentSenderRequest.Builder(rse.userAction.actionIntent.intentSender).build())
                         }
                     } else {
-                        com.codetrio.spatialflow.ui.SnackbarController.showMessage("Storage permission required to edit metadata")
+                        com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.storage_permission_required_to_edit_metadata))
                     }
                 }
             )
@@ -215,7 +216,7 @@ private fun saveTags(
                 androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context)
                     .sendBroadcast(intent)
 
-                com.codetrio.spatialflow.ui.SnackbarController.showMessage("Tags updated successfully")
+                com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.tags_updated_successfully))
                 onNavigateUp()
             }
         } catch (e: SecurityException) {
@@ -224,7 +225,7 @@ private fun saveTags(
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
-                com.codetrio.spatialflow.ui.SnackbarController.showMessage("Failed to update: ${e.message}")
+                com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.failed_to_update_, e.message.toString()))
             }
         }
     }
@@ -302,12 +303,12 @@ private fun downloadCoverArt(context: Context, scope: kotlinx.coroutines.Corouti
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    com.codetrio.spatialflow.ui.SnackbarController.showMessage("Saved art to Pictures folder!")
+                    com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.saved_art_to_pictures_folder_))
                 }
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
-                com.codetrio.spatialflow.ui.SnackbarController.showMessage("Failed to save: ${e.message}")
+                com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.failed_to_save_, e.message.toString()))
             }
         }
     }
@@ -397,7 +398,7 @@ private fun CoverArtCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Cover Art",
+                text = stringResource(R.string.cover_art),
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
@@ -428,7 +429,7 @@ private fun CoverArtCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Select a square image and fine-tune it so your cover art looks great across the app.",
+                text = stringResource(R.string.select_a_square_image_and_fine_tune_it_so_your_cover_art_looks_great_across_the_app_),
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 13.sp,
                 textAlign = TextAlign.Center,
@@ -447,13 +448,13 @@ private fun CoverArtCard(
             ) {
                 ExpressiveButton(
                     onClick = onChange,
-                    text = "Change",
+                    text = stringResource(R.string.change),
                     icon = Icons.Filled.Add,
                     modifier = Modifier.weight(1f)
                 )
                 ExpressiveButton(
                     onClick = onDownload,
-                    text = "Save to Phone",
+                    text = stringResource(R.string.save_to_phone),
                     icon = Icons.Filled.Download,
                     modifier = Modifier.weight(1f)
                 )
@@ -475,7 +476,7 @@ private fun ActionButtonsRow(
     ) {
         ExpressiveButton(
             onClick = onCancel,
-            text = "Cancel",
+            text = stringResource(R.string.cancel),
             modifier = Modifier.weight(1f),
             containerColor = Color(0xFF2E313A),
             height = 64.dp,
@@ -484,7 +485,7 @@ private fun ActionButtonsRow(
         ExpressiveButton(
             onClick = onSave,
             enabled = !isSaving && title.isNotEmpty(),
-            text = if (isSaving) "Saving..." else "Save",
+            text = if (isSaving) stringResource(R.string.saving_) else stringResource(R.string.save),
             modifier = Modifier.weight(1f),
             containerColor = Color(0xFFC2D2FF),
             contentColor = Color(0xFF131D33),
@@ -575,16 +576,16 @@ private fun TagEditorScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     Text(
-                        text = "Edit Details",
+                        text = stringResource(R.string.edit_details),
                         style = MaterialTheme.typography.headlineSmall,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    CustomInputField(label = "Title", value = title, onValueChange = { title = it }, icon = Icons.Filled.PlayArrow)
-                    CustomInputField(label = "Artist", value = artist, onValueChange = { artist = it }, icon = Icons.Filled.Person)
-                    CustomInputField(label = "Album", value = album, onValueChange = { album = it }, icon = Icons.Filled.Face)
+                    CustomInputField(label = stringResource(R.string.field_title), value = title, onValueChange = { title = it }, icon = Icons.Filled.PlayArrow)
+                    CustomInputField(label = stringResource(R.string.field_artist), value = artist, onValueChange = { artist = it }, icon = Icons.Filled.Person)
+                    CustomInputField(label = stringResource(R.string.field_album), value = album, onValueChange = { album = it }, icon = Icons.Filled.Face)
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -616,7 +617,7 @@ private fun TagEditorScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Edit Song",
+                        text = stringResource(R.string.edit_song),
                         style = MaterialTheme.typography.headlineMedium,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
@@ -635,9 +636,9 @@ private fun TagEditorScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                CustomInputField(label = "Title", value = title, onValueChange = { title = it }, icon = Icons.Filled.PlayArrow)
-                CustomInputField(label = "Artist", value = artist, onValueChange = { artist = it }, icon = Icons.Filled.Person)
-                CustomInputField(label = "Album", value = album, onValueChange = { album = it }, icon = Icons.Filled.Face)
+                CustomInputField(label = stringResource(R.string.field_title), value = title, onValueChange = { title = it }, icon = Icons.Filled.PlayArrow)
+                CustomInputField(label = stringResource(R.string.field_artist), value = artist, onValueChange = { artist = it }, icon = Icons.Filled.Person)
+                CustomInputField(label = stringResource(R.string.field_album), value = album, onValueChange = { album = it }, icon = Icons.Filled.Face)
 
                 Spacer(modifier = Modifier.height(32.dp))
 

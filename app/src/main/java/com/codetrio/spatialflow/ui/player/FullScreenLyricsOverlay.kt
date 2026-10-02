@@ -78,6 +78,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -166,7 +167,7 @@ internal fun FullScreenLyricsOverlay(
                     IconButton(onClick = onCollapse) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_keyboard_arrow_down),
-                            contentDescription = "Collapse Lyrics",
+                            contentDescription = stringResource(R.string.collapse_lyrics),
                             tint = contentColor.copy(alpha = 0.8f),
                             modifier = Modifier.size(28.dp)
                         )
@@ -190,7 +191,7 @@ internal fun FullScreenLyricsOverlay(
                         )
                     ) {
                         Text(
-                            text = "LYRICS",
+                            text = stringResource(R.string.lyrics_heading),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = contentColor.copy(alpha = 0.5f),
@@ -213,9 +214,9 @@ internal fun FullScreenLyricsOverlay(
                         val lyricTypeBadge = when {
                             activeResult == null -> null
                             !activeResult.hasLyrics() -> null
-                            isActuallyKaraoke -> "Karaoke Lyrics"
-                            activeResult.isSynced -> "Synced Lyrics"
-                            else -> "Plain Lyrics"
+                            isActuallyKaraoke -> stringResource(R.string.karaoke_lyrics)
+                            activeResult.isSynced -> stringResource(R.string.synced_lyrics)
+                            else -> stringResource(R.string.plain_lyrics)
                         }
 
                         AnimatedVisibility(
@@ -236,7 +237,7 @@ internal fun FullScreenLyricsOverlay(
                         ) {
                             if (lyricTypeBadge != null) {
                                 Text(
-                                    text = " • $lyricTypeBadge",
+                                    text = stringResource(R.string.lyric_type_badge, lyricTypeBadge),
                                     style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
                                     color = contentColor.copy(alpha = 0.4f),
@@ -246,7 +247,7 @@ internal fun FullScreenLyricsOverlay(
                         }
                     }
                     Text(
-                        text = currentSong?.title ?: "Unknown Title",
+                        text = currentSong?.title ?: stringResource(R.string.unknown_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = contentColor,
@@ -258,7 +259,7 @@ internal fun FullScreenLyricsOverlay(
                 IconButton(onClick = { showProvidersSheet = true }) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
-                        contentDescription = "Change Lyrics Provider",
+                        contentDescription = stringResource(R.string.change_lyrics_provider),
                         tint = contentColor.copy(alpha = 0.8f),
                         modifier = Modifier.size(24.dp)
                     )
@@ -323,7 +324,7 @@ internal fun FullScreenLyricsOverlay(
                                 color = dynamicAccentColor
                             )
                             Text(
-                                text = "Searching lyrics across providers...",
+                                text = stringResource(R.string.searching_lyrics_across_providers_),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = contentColor.copy(alpha = 0.7f)
                             )
@@ -332,14 +333,14 @@ internal fun FullScreenLyricsOverlay(
 
                     lyricsError != null -> {
                         LyricsErrorState(
-                            message = lyricsError.message ?: "Lyrics not found",
+                            message = lyricsError.message ?: stringResource(R.string.lyrics_not_found),
                             onRetry = onRetryLyrics
                         )
                     }
 
                     else -> {
                         LyricsErrorState(
-                            message = "Lyrics are not loaded yet",
+                            message = stringResource(R.string.lyrics_are_not_loaded_yet),
                             onRetry = onFetchLyrics
                         )
                     }
@@ -416,7 +417,7 @@ internal fun FullScreenLyricsOverlay(
                     ) {
                         Icon(
                             painter = painterResource(id = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-                            contentDescription = if (isPlaying) "Pause" else "Play",
+                            contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
                             tint = Color.Black,
                             modifier = Modifier.size(24.dp)
                         )
@@ -551,7 +552,7 @@ private fun UnifiedLyricsBottomSheetContent(
                 icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_lyrics),
-                        contentDescription = "Providers",
+                        contentDescription = stringResource(R.string.providers),
                         modifier = Modifier.size(18.dp)
                     )
                 },
@@ -563,7 +564,7 @@ private fun UnifiedLyricsBottomSheetContent(
                 )
             ) {
                 Text(
-                    text = "Providers",
+                    text = stringResource(R.string.providers),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -577,7 +578,7 @@ private fun UnifiedLyricsBottomSheetContent(
                 icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_timer),
-                        contentDescription = "Sync Timing",
+                        contentDescription = stringResource(R.string.sync_timing),
                         modifier = Modifier.size(18.dp)
                     )
                 },
@@ -593,7 +594,7 @@ private fun UnifiedLyricsBottomSheetContent(
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Sync Control",
+                        text = stringResource(R.string.sync_control),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -739,17 +740,17 @@ private fun ProvidersListTab(
                 val hasData = result != null && result.hasLyrics() && result.confidence >= 0f
 
                 val displayName = when (provider) {
-                    "EmbeddedID3" -> "Embedded ID3"
+                    "EmbeddedID3" -> stringResource(R.string.embedded_id3)
                     else -> provider
                 }
 
                 val supportingText = when {
-                    !providerResults.containsKey(provider) -> "Searching..."
-                    result == null -> "Searching..."
-                    !hasData -> "No lyrics found"
-                    result.isWordByWord -> "★ Karaoke (Word-by-word)"
-                    result.isSynced -> "Synced (LRC)"
-                    else -> "Plain Text"
+                    !providerResults.containsKey(provider) -> stringResource(R.string.searching_)
+                    result == null -> stringResource(R.string.searching_)
+                    !hasData -> stringResource(R.string.no_lyrics_found)
+                    result.isWordByWord -> stringResource(R.string.karaoke_word_by_word_2)
+                    result.isSynced -> stringResource(R.string.synced_lrc_)
+                    else -> stringResource(R.string.plain_text)
                 }
 
                 val shape = getSegmentedShape(index = index, count = sortedProviders.size)
@@ -782,7 +783,7 @@ private fun ProvidersListTab(
                         if (isSelected) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_check),
-                                contentDescription = "Selected",
+                                contentDescription = stringResource(R.string.selected),
                                 modifier = Modifier.size(20.dp)
                             )
                         } else if (!providerResults.containsKey(provider)) {
@@ -859,13 +860,13 @@ private fun ProvidersListTab(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_refresh),
-                    contentDescription = "Refind and Research",
+                    contentDescription = stringResource(R.string.refind_and_research),
                     modifier = Modifier.size(20.dp),
                     tint = contentColor
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Refind & Re-search All Providers",
+                    text = stringResource(R.string.refind_and_re_search_all_providers),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = contentColor
@@ -902,12 +903,12 @@ private fun SyncControlTab(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_timer),
-                contentDescription = "Sync Offset",
+                contentDescription = stringResource(R.string.sync_offset),
                 tint = if (syncOffsetMs != 0L) accentColor else contentColor.copy(alpha = 0.7f),
                 modifier = Modifier.size(20.dp)
             )
             Text(
-                text = if (syncOffsetMs == 0L) "0.0s (In Sync)" else String.format(java.util.Locale.US, "%+.2fs Offset", syncOffsetMs / 1000f),
+                text = if (syncOffsetMs == 0L) stringResource(R.string.s_0_0s_in_sync_) else stringResource(R.string.percent_2fs_offset, syncOffsetMs / 1000f),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.ExtraBold,
                 color = if (syncOffsetMs != 0L) accentColor else contentColor
@@ -916,11 +917,12 @@ private fun SyncControlTab(
 
         // ── 100% Native Google Material 3 Connected Preset Button Row ──
         // ── 100% Native Google Material 3 Connected Preset Button Row ──
-        val presetValues = remember {
+        val resetPresetLabel = stringResource(R.string.reset)
+        val presetValues = remember(resetPresetLabel) {
             listOf(
                 -500L to "-0.5s",
                 -100L to "-0.1s",
-                0L to "Reset", // Exact Center (Index 2)
+                0L to resetPresetLabel, // Exact Center (Index 2)
                 100L to "+0.1s",
                 500L to "+0.5s"
             )
@@ -995,7 +997,7 @@ private fun SyncControlTab(
                         if (isReset) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_refresh),
-                                contentDescription = "Reset",
+                                contentDescription = stringResource(R.string.reset),
                                 tint = itemContentColor,
                                 modifier = Modifier.size(14.dp)
                             )

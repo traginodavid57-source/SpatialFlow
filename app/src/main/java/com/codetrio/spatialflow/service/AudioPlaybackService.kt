@@ -951,7 +951,7 @@ class AudioPlaybackService : MediaSessionService() {
         if (currentSong != null) {
             currentSongName = currentSong.title
         }
-        return buildMediaItem(uri, currentSongName, currentSong?.artist ?: "Unknown Artist", songId)
+        return buildMediaItem(uri, currentSongName, currentSong?.artist ?: getString(R.string.unknown_artist), songId)
     }
 
     private fun buildMediaItem(uri: Uri, title: String, artist: String, songId: String = ""): MediaItem {
@@ -991,7 +991,7 @@ class AudioPlaybackService : MediaSessionService() {
         if (mediaItem != null) {
             val metadataBuilder = mediaItem.mediaMetadata.buildUpon()
                 .setTitle(currentSongName)
-                .setArtist(viewModel?.currentSong?.value?.artist ?: "Unknown Artist")
+                .setArtist(viewModel?.currentSong?.value?.artist ?: getString(R.string.unknown_artist))
             currentAlbumArt?.let {
                 val stream = java.io.ByteArrayOutputStream()
                 it.compress(Bitmap.CompressFormat.PNG, 100, stream)
@@ -1581,7 +1581,7 @@ class AudioPlaybackService : MediaSessionService() {
 
         val mode = currentNotificationPlaybackMode(vm)
         val modeButton = CommandButton.Builder()
-            .setDisplayName("Playback Mode")
+            .setDisplayName(getString(R.string.playback_mode))
             .setSessionCommand(CMD_CYCLE_PLAYBACK_MODE)
             .setIconResId(notificationPlaybackModeIcon(mode))
             .setEnabled(true)
@@ -1589,7 +1589,7 @@ class AudioPlaybackService : MediaSessionService() {
             
         val favIcon = if (vm?.isCurrentSongFavorite?.value == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border
         val favButton = CommandButton.Builder()
-            .setDisplayName("Favorite")
+            .setDisplayName(getString(R.string.favorite))
             .setSessionCommand(CMD_TOGGLE_FAV)
             .setIconResId(favIcon)
             .setEnabled(true)
@@ -1640,9 +1640,9 @@ class AudioPlaybackService : MediaSessionService() {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = android.app.NotificationChannel(
-                "audio_playback_channel", "Audio Playback", android.app.NotificationManager.IMPORTANCE_HIGH
+                "audio_playback_channel", getString(R.string.audio_playback), android.app.NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Shows currently playing audio"
+                description = getString(R.string.shows_currently_playing_audio)
                 setShowBadge(false)
                 lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
                 enableVibration(false)
@@ -1987,7 +1987,7 @@ class AudioPlaybackService : MediaSessionService() {
             // Explicitly set channel and properties to match Java example exactly
             // The small icon is set on the provider instance in setupMediaSession
             notificationBuilder.setContentTitle(currentSongName)
-            notificationBuilder.setContentText(if (is8DEnabled) "🎧 8D Audio" else "Normal Playback")
+            notificationBuilder.setContentText(if (is8DEnabled) getString(R.string.notification_8d_audio) else getString(R.string.normal_playback))
             notificationBuilder.setSubText("SpatialFlow")
             notificationBuilder.setChannelId("audio_playback_channel")
             notificationBuilder.setOngoing(isPlaying)
@@ -2008,26 +2008,26 @@ class AudioPlaybackService : MediaSessionService() {
             val mode = currentNotificationPlaybackMode(viewModel)
             notificationBuilder.addAction(
                 notificationPlaybackModeIcon(mode),
-                "Mode",
+                getString(R.string.mode),
                 getActionIntent(ACTION_CYCLE_PLAYBACK_MODE, 10)
             )
             
             // 1: Previous
-            notificationBuilder.addAction(android.R.drawable.ic_media_previous, "Previous", getActionIntent(ACTION_PREVIOUS, 11))
+            notificationBuilder.addAction(android.R.drawable.ic_media_previous, getString(R.string.previous), getActionIntent(ACTION_PREVIOUS, 11))
             
             // 2: Play/Pause
             notificationBuilder.addAction(
                 if (isPlaying) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play, 
-                if (isPlaying) "Pause" else "Play", 
+                if (isPlaying) getString(R.string.pause) else getString(R.string.play), 
                 if (isPlaying) getActionIntent(ACTION_PAUSE, 12) else getActionIntent(ACTION_PLAY, 13)
             )
             
             // 3: Next
-            notificationBuilder.addAction(android.R.drawable.ic_media_next, "Next", getActionIntent(ACTION_NEXT, 14))
+            notificationBuilder.addAction(android.R.drawable.ic_media_next, getString(R.string.next), getActionIntent(ACTION_NEXT, 14))
             
             // 4: Favorite
             val favIcon = if (viewModel?.isCurrentSongFavorite?.value == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border
-            notificationBuilder.addAction(favIcon, "Favorite", getActionIntent(ACTION_TOGGLE_FAV, 15))
+            notificationBuilder.addAction(favIcon, getString(R.string.favorite), getActionIntent(ACTION_TOGGLE_FAV, 15))
             
             // Compact view indices (Prev, Play, Next)
             val style = androidx.media3.session.MediaStyleNotificationHelper.MediaStyle(mediaSession)

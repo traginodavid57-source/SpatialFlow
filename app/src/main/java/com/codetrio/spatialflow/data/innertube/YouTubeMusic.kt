@@ -528,7 +528,7 @@ object YouTubeMusic {
                     playlistId = playlistId,
                     title = title,
                     author = author,
-                    songCount = songCount ?: "${songs.size} songs",
+                    songCount = songCount ?: com.codetrio.spatialflow.SpatialFlowApplication.instance.getString(com.codetrio.spatialflow.R.string.songs_count, songs.size),
                     thumbnailUrl = thumbnail
                 ),
                 songs = songs,

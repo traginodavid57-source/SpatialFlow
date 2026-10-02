@@ -61,6 +61,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -252,7 +253,7 @@ class MainActivity : AppCompatActivity() {
                             try {
                                 com.codetrio.spatialflow.util.TelegramHelper.openTelegram(this@MainActivity, domain = "SpatialFlow")
                             } catch (e: Exception) {
-                                android.widget.Toast.makeText(this@MainActivity, "Could not open Telegram", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(this@MainActivity, getString(R.string.could_not_open_telegram), android.widget.Toast.LENGTH_SHORT).show()
                             }
                         }
                     )
@@ -294,10 +295,10 @@ class MainActivity : AppCompatActivity() {
                             containerColor = MaterialTheme.colorScheme.surfaceContainer
                         ) {
                             val items = listOf(
-                                Triple("explore", "Explore", R.drawable.ic_explore),
-                                Triple("library", "Library", R.drawable.ic_library_music),
-                                Triple("effects", "Effects", R.drawable.ic_equalizer),
-                                Triple("settings", "Settings", R.drawable.ic_settings)
+                                Triple("explore", stringResource(R.string.tab_explore), R.drawable.ic_explore),
+                                Triple("library", stringResource(R.string.tab_library), R.drawable.ic_library_music),
+                                Triple("effects", stringResource(R.string.tab_effects), R.drawable.ic_equalizer),
+                                Triple("settings", stringResource(R.string.tab_settings), R.drawable.ic_settings)
                             )
                             items.forEach { (route, label, iconResId) ->
                                 val selected = currentDestination?.route == route
@@ -408,10 +409,10 @@ class MainActivity : AppCompatActivity() {
                             tonalElevation = navElevation
                         ) {
                             val items = listOf(
-                                Triple("explore", "Explore", R.drawable.ic_explore),
-                                Triple("library", "Library", R.drawable.ic_library_music),
-                                Triple("effects", "Effects", R.drawable.ic_equalizer),
-                                Triple("settings", "Settings", R.drawable.ic_settings)
+                                Triple("explore", stringResource(R.string.tab_explore), R.drawable.ic_explore),
+                                Triple("library", stringResource(R.string.tab_library), R.drawable.ic_library_music),
+                                Triple("effects", stringResource(R.string.tab_effects), R.drawable.ic_equalizer),
+                                Triple("settings", stringResource(R.string.tab_settings), R.drawable.ic_settings)
                             )
                              items.forEach { (route, label, iconResId) ->
                                 val selected = currentDestination?.route == route
@@ -998,7 +999,7 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun playExternalUri(uri: Uri) {
-        var displayName = "External Track"
+        var displayName = getString(R.string.external_track)
         if ("content" == uri.scheme) {
             try {
                 contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
@@ -1027,7 +1028,7 @@ class MainActivity : AppCompatActivity() {
         val externalSong = SongItem(
             externalId,
             displayName,
-            "External Source",
+            getString(R.string.external_source),
             -1L,
             uri.toString(),
             0L,

@@ -65,6 +65,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
@@ -131,7 +132,7 @@ fun FullPlayerScreen(
         if (isGranted) {
             viewModel.setHapticsEnabled(true)
         } else {
-            com.codetrio.spatialflow.ui.SnackbarController.showMessage("Microphone permission required for haptics")
+            com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.microphone_permission_required_for_haptics))
         }
     }
     
@@ -150,7 +151,7 @@ fun FullPlayerScreen(
                 val currentSong = uiState.currentSong
                 if (currentSong != null) {
                     viewModel.addSongToLocalPlaylist(playlist.id, currentSong)
-                    com.codetrio.spatialflow.ui.SnackbarController.showMessage("Added to playlist: ${playlist.title}")
+                    com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.added_to_playlist, playlist.title))
                 }
                 showAddToPlaylistDialog = false
             },
@@ -459,7 +460,7 @@ fun FullPlayer(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = uiState.currentSong?.title ?: "Unknown Title",
+                        text = uiState.currentSong?.title ?: stringResource(R.string.unknown_title),
                         style = MaterialTheme.typography.headlineMediumEmphasized,
                         fontWeight = FontWeight.Bold,
                         color = contentColor,
@@ -468,7 +469,7 @@ fun FullPlayer(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = uiState.currentSong?.artist ?: "Unknown Artist",
+                        text = uiState.currentSong?.artist ?: stringResource(R.string.unknown_artist),
                         style = MaterialTheme.typography.bodyMedium,
                         color = contentSecondary,
                         maxLines = 1,
@@ -521,7 +522,7 @@ fun FullPlayer(
                 // Interactive Music Haptics Chip inside the same row
                 PillChip(
                     icon = painterResource(id = R.drawable.ic_haptic),
-                    label = "Music Haptics",
+                    label = stringResource(R.string.music_haptics),
                     isSelected = uiState.isHapticsEnabled,
                     onClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -535,7 +536,7 @@ fun FullPlayer(
                 // Interactive Lyrics Chip inside the same row
                 PillChip(
                     icon = painterResource(id = R.drawable.ic_lyrics),
-                    label = "Lyrics",
+                    label = stringResource(R.string.lyrics),
                     isSelected = isLyricsModeEnabled,
                     onClick = {
                         onLyricsModeChanged(true)
@@ -551,7 +552,7 @@ fun FullPlayer(
 
                 PillChip(
                     icon = Icons.Rounded.PlaylistAdd,
-                    label = "Save",
+                    label = stringResource(R.string.save),
                     onClick = onSaveClick,
                     contentColor = contentColor,
                     accentColor = dynamicAccentColor,
@@ -560,14 +561,14 @@ fun FullPlayer(
 
                 PillChip(
                     icon = painterResource(id = R.drawable.ic_share),
-                    label = "Share",
+                    label = stringResource(R.string.share),
                     onClick = {
                         val shareIntent = Intent().apply {
                             action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, "Listening on SpatialFlow Check out : https://music.youtube.com/watch?v=${uiState.currentSong?.videoId}")
+                            putExtra(Intent.EXTRA_TEXT, context.getString(R.string.listening_on_spatialflow_check_out_https_music_youtube_com_watch_v_, uiState.currentSong?.videoId.toString()))
                             type = "text/plain"
                         }
-                        context.startActivity(Intent.createChooser(shareIntent, "Share Track"))
+                        context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share_track)))
                     },
                     contentColor = contentColor,
                     accentColor = dynamicAccentColor,
@@ -579,9 +580,9 @@ fun FullPlayer(
                 val isDownloading = realDownloadProgress != null
 
                 val downloadLabel = when {
-                    realDownloaded -> "Downloaded"
-                    isDownloading -> "Downloading ${realDownloadProgress}%"
-                    else -> "Download"
+                    realDownloaded -> stringResource(R.string.downloaded)
+                    isDownloading -> stringResource(R.string.downloading_percent, realDownloadProgress ?: 0)
+                    else -> stringResource(R.string.download)
                 }
                 val downloadIcon: Any = when {
                     realDownloaded -> painterResource(id = R.drawable.ic_downloaded)
@@ -665,7 +666,7 @@ fun FullPlayer(
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_skip_previous),
-                                    contentDescription = "Previous Song",
+                                    contentDescription = stringResource(R.string.previous_song),
                                     modifier = Modifier.size(36.dp)
                                 )
                             }
@@ -707,7 +708,7 @@ fun FullPlayer(
                             ) {
                                 Icon(
                                     painter = painterResource(id = if (uiState.isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-                                    contentDescription = if (uiState.isPlaying) "Pause" else "Play",
+                                    contentDescription = if (uiState.isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
                                     modifier = Modifier.size(42.dp)
                                 )
                             }
@@ -749,7 +750,7 @@ fun FullPlayer(
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_skip_next),
-                                    contentDescription = "Next Song",
+                                    contentDescription = stringResource(R.string.next_song),
                                     modifier = Modifier.size(36.dp)
                                 )
                             }
@@ -785,7 +786,7 @@ fun FullPlayer(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_keyboard_arrow_down),
-                    contentDescription = "Open Queue",
+                    contentDescription = stringResource(R.string.open_queue),
                     tint = contentColor.copy(alpha = 0.5f),
                     modifier = Modifier
                         .size(32.dp)
@@ -819,7 +820,7 @@ fun FullPlayer(
                     IconButton(onClick = onCollapse) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_keyboard_arrow_down),
-                            contentDescription = "Collapse Player",
+                            contentDescription = stringResource(R.string.collapse_player),
                             tint = contentColor.copy(alpha = 0.8f),
                             modifier = Modifier.size(28.dp)
                         )
@@ -827,7 +828,7 @@ fun FullPlayer(
 
                     if (!hasCanvas || isLyricsModeEnabled) {
                         Text(
-                            text = "NOW PLAYING",
+                            text = stringResource(R.string.now_playing_heading),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
                             color = contentSecondary

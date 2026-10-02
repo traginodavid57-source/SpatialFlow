@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.data.lyrics.ConfidenceScorer
 import com.codetrio.spatialflow.data.lyrics.LrcLibApi
 import com.codetrio.spatialflow.data.lyrics.KugouApi
@@ -271,7 +272,7 @@ class LyricsFetchManager private constructor(context: Context) {
             if (cancelled.get()) return@launch
 
             withContext(Dispatchers.Main) {
-                callback.onSearchStatus("Searching multiple sources…")
+                callback.onSearchStatus(appContext.getString(R.string.searching_multiple_sources_))
             }
 
             val resultsList = mutableListOf<LyricsResult>()
@@ -354,7 +355,7 @@ class LyricsFetchManager private constructor(context: Context) {
                             cacheManager.putNegative(track)
                             telemetry.logFailure("All providers returned low confidence results")
                             withContext(Dispatchers.Main) {
-                                callback.onLyricsNotFound("No matching lyrics found")
+                                callback.onLyricsNotFound(appContext.getString(R.string.no_matching_lyrics_found))
                             }
                         }
                     }
@@ -363,7 +364,7 @@ class LyricsFetchManager private constructor(context: Context) {
                         cacheManager.putNegative(track)
                         telemetry.logFailure("Decision: $decision")
                         withContext(Dispatchers.Main) {
-                            callback.onLyricsNotFound("No lyrics available")
+                            callback.onLyricsNotFound(appContext.getString(R.string.no_lyrics_available))
                         }
                     }
                 }
@@ -386,7 +387,7 @@ class LyricsFetchManager private constructor(context: Context) {
                     cacheManager.putNegative(track)
                     telemetry.logFailure("No results from any provider")
                     withContext(Dispatchers.Main) {
-                        callback.onLyricsNotFound("No lyrics available")
+                        callback.onLyricsNotFound(appContext.getString(R.string.no_lyrics_available))
                     }
                 }
             }

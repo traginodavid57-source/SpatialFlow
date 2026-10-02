@@ -29,9 +29,11 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.data.innertube.OnlineSong
 import com.codetrio.spatialflow.data.innertube.SearchItem
 import com.codetrio.spatialflow.ui.explore.SearchResultItem
@@ -58,10 +60,10 @@ fun HistoryScreen(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
-                title = { Text("Listening History", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.listening_history), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -106,13 +108,13 @@ fun HistoryScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "No listening history yet",
+                            text = stringResource(R.string.no_listening_history_yet),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Songs you listen to from your account will appear here.",
+                            text = stringResource(R.string.songs_you_listen_to_from_your_account_will_appear_here_),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center

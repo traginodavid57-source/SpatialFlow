@@ -63,11 +63,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.data.innertube.AlbumPage
 import com.codetrio.spatialflow.data.innertube.ArtistPage
 import com.codetrio.spatialflow.data.innertube.HomeSection
@@ -102,7 +104,7 @@ fun AlbumDetailView(
         isLandscape = isLandscape,
         thumbnailUrl = albumPage.album.thumbnailUrl,
         title = albumPage.album.title,
-        subtitle = "Album • ${albumPage.songs.size} tracks",
+        subtitle = stringResource(R.string.album_tracks, albumPage.songs.size),
         sharedElementKey = albumPage.album.browseId,
         onBack = onBack,
         headerActions = {
@@ -154,7 +156,7 @@ fun PlaylistDetailView(
         isLandscape = isLandscape,
         thumbnailUrl = playlistPage.playlist.thumbnailUrl,
         title = playlistPage.playlist.title,
-        subtitle = "Curated Playlist • ${playlistPage.songs.size} items",
+        subtitle = stringResource(R.string.curated_playlist_items, playlistPage.songs.size),
         sharedElementKey = playlistPage.playlist.playlistId,
         onBack = onBack,
         headerActions = {
@@ -257,7 +259,7 @@ fun ArtistDetailView(
         headerActions = {
             // Follow/Subscribe Button
             if (onSubscribeClick != null) {
-                val label = if (isSubscribed) "Subscribed" else "Subscribe"
+                val label = if (isSubscribed) stringResource(R.string.subscribed) else stringResource(R.string.subscribe)
                 FilledTonalButton(
                     onClick = {
                         onSubscribeClick(artistPage.artist.browseId)
@@ -300,7 +302,7 @@ fun ArtistDetailView(
                 ) {
                     Icon(
                         painter = painterResource(id = com.codetrio.spatialflow.R.drawable.ic_radio),
-                        contentDescription = "Start Radio",
+                        contentDescription = stringResource(R.string.start_radio),
                         tint = MaterialTheme.colorScheme.onSecondaryContainer,
                         modifier = Modifier.size(24.dp)
                     )
@@ -319,7 +321,7 @@ fun ArtistDetailView(
                     .background(MaterialTheme.colorScheme.onBackground, CircleShape)
             ) {
                 Icon(painter = painterResource(id = com.codetrio.spatialflow.R.drawable.ic_play)
-                    , "Play All",
+                    , stringResource(R.string.play_all_title),
                     tint = MaterialTheme.colorScheme.background,
                     modifier = Modifier.size(28.dp))
             }
@@ -329,18 +331,19 @@ fun ArtistDetailView(
             val isTopSongs = section.title.contains("song", ignoreCase = true)
             if (isTopSongs) {
                 item {
+                    val topSongsTitle = stringResource(R.string.top_songs)
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Top songs", style = MaterialTheme.typography.titleLarge,
+                        Text(topSongsTitle, style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.clickable {
                                 if (section.browseEndpoint != null) {
-                                    onSectionClick?.invoke(section.browseEndpoint, section.params, "Top songs")
+                                    onSectionClick?.invoke(section.browseEndpoint, section.params, topSongsTitle)
                                 } else {
                                     val songs = section.items.filterIsInstance<SearchItem.Song>().map { it.song }
                                     if (songs.isNotEmpty()) onSongClick(songs.first(), songs, 0)
@@ -353,14 +356,14 @@ fun ArtistDetailView(
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
                                 Text(
-                                    text = if (section.browseEndpoint != null) "See all" else "Play all",
+                                    text = if (section.browseEndpoint != null) stringResource(R.string.see_all) else stringResource(R.string.play_all),
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     fontWeight = FontWeight.Medium
                                 )
                             }
                             Spacer(modifier = Modifier.width(4.dp))
-                            Icon(Icons.Default.ChevronRight, "See all",
+                            Icon(Icons.Default.ChevronRight, stringResource(R.string.see_all),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(20.dp))
                         }
                     }
@@ -545,7 +548,7 @@ fun AdaptiveDetailContainer(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack, 
-                        contentDescription = "Back", 
+                        contentDescription = stringResource(R.string.back), 
                         tint = MaterialTheme.colorScheme.onSurface
                     )
 
@@ -697,7 +700,7 @@ fun AdaptiveDetailContainer(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack, 
-                        contentDescription = "Back", 
+                        contentDescription = stringResource(R.string.back), 
                         tint = Color.White
                     )
                 }
@@ -763,7 +766,7 @@ fun ArtistTopSongItem(
             )
         }
         IconButton(onClick = onMenuClick) {
-            Icon(Icons.Default.MoreVert, "More", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            Icon(Icons.Default.MoreVert, stringResource(R.string.more), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -872,7 +875,7 @@ fun ExpressiveConnectedButtonGroup(
                         ) {
                             Icon(Icons.Default.Shuffle, null, modifier = Modifier.size(20.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Shuffle", fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.shuffle), fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -918,7 +921,7 @@ fun ExpressiveConnectedButtonGroup(
                         ) {
                             Icon(Icons.Default.Radio, null, modifier = Modifier.size(20.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Radio", fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.radio), fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -954,7 +957,7 @@ fun SectionDetailView(
             isLandscape = isLandscape,
             thumbnailUrl = songs.firstOrNull()?.thumbnailUrl,
             title = section.title,
-            subtitle = "Songs • ${songs.size} items",
+            subtitle = stringResource(R.string.songs_items, songs.size),
             sharedElementKey = section.title,
             onBack = onBack,
             headerActions = {
@@ -999,7 +1002,7 @@ fun SectionDetailView(
             isLandscape = isLandscape,
             thumbnailUrl = firstItemThumb,
             title = section.title,
-            subtitle = "Collection • ${section.items.size} items",
+            subtitle = stringResource(R.string.collection_items, section.items.size),
             sharedElementKey = section.title,
             onBack = onBack,
             headerActions = null
@@ -1085,7 +1088,7 @@ fun MoodDetailView(
         isLandscape = isLandscape,
         thumbnailUrl = firstItemThumb,
         title = moodDetail.moodName,
-        subtitle = "Mood Hub • ${moodDetail.sections.size} categories",
+        subtitle = stringResource(R.string.mood_hub_categories, moodDetail.sections.size),
         sharedElementKey = "mood-${moodDetail.moodName}",
         onBack = onBack,
         headerActions = {

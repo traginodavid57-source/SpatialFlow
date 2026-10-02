@@ -118,6 +118,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -313,7 +314,7 @@ fun LibraryScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Library",
+                            text = stringResource(R.string.tab_library),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -326,7 +327,7 @@ fun LibraryScreen(
                             IconButton(onClick = { showHistoryScreen = true }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_history),
-                                    contentDescription = "Listening History",
+                                    contentDescription = stringResource(R.string.listening_history),
                                     tint = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.size(24.dp)
                                 )
@@ -338,7 +339,7 @@ fun LibraryScreen(
                                         .data(userProfile?.avatarUrl)
                                         .crossfade(true)
                                         .build(),
-                                    contentDescription = "Account Settings",
+                                    contentDescription = stringResource(R.string.account_settings),
                                     modifier = Modifier
                                         .size(32.dp)
                                         .clip(CircleShape)
@@ -349,7 +350,7 @@ fun LibraryScreen(
                                 IconButton(onClick = { showAccountScreen = true }) {
                                     Icon(
                                         imageVector = Icons.Default.AccountCircle,
-                                        contentDescription = "Account Settings",
+                                        contentDescription = stringResource(R.string.account_settings),
                                         tint = MaterialTheme.colorScheme.onSurface,
                                         modifier = Modifier.size(28.dp)
                                     )
@@ -441,7 +442,7 @@ fun LibraryScreen(
                                 OutlinedTextField(
                                     value = searchQuery,
                                     onValueChange = { searchQuery = it },
-                                    placeholder = { Text("Search local songs...") },
+                                    placeholder = { Text(stringResource(R.string.search_local_songs_)) },
                                     leadingIcon = { Icon(Icons.Default.Search, null) },
                                     trailingIcon = {
                                         if (searchQuery.isNotEmpty()) {
@@ -527,19 +528,19 @@ fun LibraryScreen(
                                                 val diff = (System.currentTimeMillis() / 1000) - song.dateAdded
                                                 val days = diff / (60 * 60 * 24)
                                                 val header = when {
-                                                    days < 1 -> "Today"
-                                                    days < 2 -> "Yesterday"
-                                                    days < 7 -> "This Week"
-                                                    days < 30 -> "This Month"
-                                                    days < 365 -> "This Year"
-                                                    else -> "Older"
+                                                    days < 1 -> context.getString(R.string.today)
+                                                    days < 2 -> context.getString(R.string.yesterday)
+                                                    days < 7 -> context.getString(R.string.this_week)
+                                                    days < 30 -> context.getString(R.string.this_month)
+                                                    days < 365 -> context.getString(R.string.this_year)
+                                                    else -> context.getString(R.string.older)
                                                 }
                                                 groups.getOrPut(header) { mutableListOf() }.add(song)
                                             }
                                         }
                                         SortOrder.ARTIST -> {
                                             for (song in sorted) {
-                                                val header = song.artist.ifBlank { "Unknown Artist" }
+                                                val header = song.artist.ifBlank { context.getString(R.string.unknown_artist) }
                                                 groups.getOrPut(header) { mutableListOf() }.add(song)
                                             }
                                         }
@@ -547,11 +548,11 @@ fun LibraryScreen(
                                             for (song in sorted) {
                                                 val min = song.duration / 60000
                                                 val header = when {
-                                                    min < 2 -> "Under 2 min"
-                                                    min < 4 -> "2-4 min"
-                                                    min < 6 -> "4-6 min"
-                                                    min < 10 -> "6-10 min"
-                                                    else -> "Over 10 min"
+                                                    min < 2 -> context.getString(R.string.under_2_min)
+                                                    min < 4 -> context.getString(R.string.s_2_4_min)
+                                                    min < 6 -> context.getString(R.string.s_4_6_min)
+                                                    min < 10 -> context.getString(R.string.s_6_10_min)
+                                                    else -> context.getString(R.string.over_10_min)
                                                 }
                                                 groups.getOrPut(header) { mutableListOf() }.add(song)
                                             }
@@ -577,7 +578,7 @@ fun LibraryScreen(
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Text(
-                                            if (searchQuery.isNotEmpty()) "No matching songs found" else "Scan device files to load songs",
+                                            if (searchQuery.isNotEmpty()) stringResource(R.string.no_matching_songs_found) else stringResource(R.string.scan_device_files_to_load_songs),
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
@@ -623,12 +624,12 @@ fun LibraryScreen(
                                                         when (dismissState.currentValue) {
                                                             SwipeToDismissBoxValue.StartToEnd -> {
                                                                 viewModel.addToQueueNext(songItem)
-                                                                com.codetrio.spatialflow.ui.SnackbarController.showMessage("Playing next: ${songItem.title}")
+                                                                com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.playing_next, songItem.title))
                                                                 dismissState.snapTo(SwipeToDismissBoxValue.Settled)
                                                             }
                                                             SwipeToDismissBoxValue.EndToStart -> {
                                                                 viewModel.addToQueue(songItem)
-                                                                com.codetrio.spatialflow.ui.SnackbarController.showMessage("Added to queue: ${songItem.title}")
+                                                                com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.added_to_queue_, songItem.title))
                                                                 dismissState.snapTo(SwipeToDismissBoxValue.Settled)
                                                             }
                                                             SwipeToDismissBoxValue.Settled -> {}
@@ -705,13 +706,13 @@ fun LibraryScreen(
                                                                         override fun onPlayNext(song: SongItem) {
                                                                             viewModel.addToQueueNext(song)
                                                                             scope.launch {
-                                                                                com.codetrio.spatialflow.ui.SnackbarController.showMessage("Playing next: ${song.title}")
+                                                                                com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.playing_next, song.title))
                                                                             }
                                                                         }
                                                                         override fun onAddToQueue(song: SongItem) {
                                                                             viewModel.addToQueue(song)
                                                                             scope.launch {
-                                                                                com.codetrio.spatialflow.ui.SnackbarController.showMessage("Added to queue: ${song.title}")
+                                                                                com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.added_to_queue_, song.title))
                                                                             }
                                                                         }
                                                                         override fun onDelete(song: SongItem) {
@@ -734,9 +735,9 @@ fun LibraryScreen(
                                                                                 val intent = Intent(Intent.ACTION_SEND).apply {
                                                                                     type = "audio/*"
                                                                                     putExtra(Intent.EXTRA_STREAM, song.contentUri)
-                                                                                    putExtra(Intent.EXTRA_TEXT, "Listen to ${song.title}")
+                                                                                    putExtra(Intent.EXTRA_TEXT, context.getString(R.string.listen_to, song.title))
                                                                                 }
-                                                                                context.startActivity(Intent.createChooser(intent, "Share Song"))
+                                                                                context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_song)))
                                                                             } catch (_: Exception) {}
                                                                         }
                                                                     })
@@ -850,7 +851,7 @@ fun LibraryScreen(
                     viewModel.addSongToLocalPlaylist(playlist.id, songToAddPlaylist!!)
                     showAddToPlaylistDialog = false
                     songToAddPlaylist = null
-                    com.codetrio.spatialflow.ui.SnackbarController.showMessage("Added to playlist: ${playlist.title}")
+                    com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.added_to_playlist, playlist.title))
                 },
                 onDismiss = {
                     showAddToPlaylistDialog = false
@@ -934,7 +935,7 @@ fun SongListItem(
                     .placeholder(R.drawable.ic_music_note)
                     .fallback(R.drawable.ic_music_note)
                     .build(),
-                contentDescription = "Album Art",
+                contentDescription = stringResource(R.string.album_art),
                 modifier = Modifier
                     .size(54.dp)
                     .clip(MaterialTheme.shapes.medium),
@@ -949,7 +950,7 @@ fun SongListItem(
                 if (isFavorite) {
                     Icon(
                         imageVector = Icons.Default.Favorite,
-                        contentDescription = "Favorite",
+                        contentDescription = stringResource(R.string.favorite),
                         tint = accentColor,
                         modifier = Modifier.size(18.dp)
                     )
@@ -957,7 +958,7 @@ fun SongListItem(
                 if (isPlaying) {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Now Playing",
+                        contentDescription = stringResource(R.string.now_playing),
                         tint = accentColor,
                         modifier = Modifier.size(22.dp)
                     )
@@ -1016,14 +1017,14 @@ private fun UnifiedLibraryContent(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Access YouTube Music",
+                        text = stringResource(R.string.access_youtube_music),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Sign in to access your online playlists, saved songs, listening history, and personalized recommendations.",
+                        text = stringResource(R.string.sign_in_to_access_your_online_playlists_saved_songs_listening_history_and_personalized_recommendations_),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -1037,7 +1038,7 @@ private fun UnifiedLibraryContent(
                             .fillMaxWidth()
                             .height(48.dp)
                     ) {
-                        Text("Sign In", fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.sign_in), fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -1069,9 +1070,9 @@ private fun UnifiedLibraryContent(
 
         if (onlineSongs.isNotEmpty()) {
             list.add(object : UnifiedLibraryItem {
-                override val title = "Liked Songs"
+                override val title = context.getString(R.string.liked_songs)
                 override val thumbnailUrl = onlineSongs.firstOrNull()?.thumbnailUrl
-                override val subtitle = "Auto playlist • ${onlineSongs.size} songs"
+                override val subtitle = context.getString(R.string.auto_playlist_songs, onlineSongs.size)
                 override val onClick = {
                     exploreViewModel?.cameFromLibrary = true
                     exploreViewModel?.loadPlaylist("LM")
@@ -1085,7 +1086,7 @@ private fun UnifiedLibraryContent(
             list.add(object : UnifiedLibraryItem {
                 override val title = playlist.title
                 override val thumbnailUrl = playlist.thumbnailUrl
-                override val subtitle = "Playlist" + (if (playlist.songCount?.isNotEmpty() == true) " • ${playlist.songCount}" else "")
+                override val subtitle = context.getString(R.string.playlist) + (if (playlist.songCount?.isNotEmpty() == true) " • ${playlist.songCount}" else "")
                 override val onClick = {
                     exploreViewModel?.cameFromLibrary = true
                     exploreViewModel?.loadPlaylist(playlist.playlistId)
@@ -1099,7 +1100,7 @@ private fun UnifiedLibraryContent(
             list.add(object : UnifiedLibraryItem {
                 override val title = album.title
                 override val thumbnailUrl = album.thumbnailUrl
-                override val subtitle = "Album" + (if (album.artists.isNotEmpty()) " • ${album.artists.firstOrNull()?.name}" else "")
+                override val subtitle = context.getString(R.string.field_album) + (if (album.artists.isNotEmpty()) " • ${album.artists.firstOrNull()?.name}" else "")
                 override val onClick = {
                     exploreViewModel?.cameFromLibrary = true
                     exploreViewModel?.loadAlbum(album.browseId)
@@ -1113,7 +1114,7 @@ private fun UnifiedLibraryContent(
             list.add(object : UnifiedLibraryItem {
                 override val title = artist.title
                 override val thumbnailUrl = artist.thumbnailUrl
-                override val subtitle = "Artist"
+                override val subtitle = context.getString(R.string.field_artist)
                 override val onClick = {
                     exploreViewModel?.cameFromLibrary = true
                     exploreViewModel?.loadArtist(artist.browseId, artist.thumbnailUrl)
@@ -1127,7 +1128,7 @@ private fun UnifiedLibraryContent(
             list.add(object : UnifiedLibraryItem {
                 override val title = podcast.title
                 override val thumbnailUrl = podcast.thumbnailUrl
-                override val subtitle = "Podcast"
+                override val subtitle = context.getString(R.string.podcast)
                 override val onClick = {
                     exploreViewModel?.cameFromLibrary = true
                     exploreViewModel?.loadPlaylist(podcast.playlistId)
@@ -1143,7 +1144,7 @@ private fun UnifiedLibraryContent(
 
     if (unifiedItems.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No items found in your library", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.no_items_found_in_your_library), color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     } else {
         LazyVerticalGrid(
@@ -1269,12 +1270,12 @@ private fun PlaylistsTabContent(
         var name by remember { mutableStateOf("") }
         AlertDialog(
             onDismissRequest = { showCreatePlaylistDialog = false },
-            title = { Text("Create New Playlist", fontWeight = FontWeight.Bold) },
+            title = { Text(stringResource(R.string.create_new_playlist), fontWeight = FontWeight.Bold) },
             text = {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Playlist Name") },
+                    label = { Text(stringResource(R.string.playlist_name)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1289,12 +1290,12 @@ private fun PlaylistsTabContent(
                     },
                     enabled = name.isNotBlank()
                 ) {
-                    Text("Create")
+                    Text(stringResource(R.string.create))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showCreatePlaylistDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -1320,7 +1321,7 @@ private fun PlaylistsTabContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "My Playlists",
+                stringResource(R.string.my_playlists),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -1328,7 +1329,7 @@ private fun PlaylistsTabContent(
             IconButton(onClick = { showCreatePlaylistDialog = true }) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = "Create Playlist",
+                    contentDescription = stringResource(R.string.create_playlist),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -1346,7 +1347,7 @@ private fun PlaylistsTabContent(
             ) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        "+ Create a playlist to get started",
+                        stringResource(R.string.create_a_playlist_to_get_started),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -1398,7 +1399,7 @@ private fun PlaylistsTabContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                "YT Music Playlists",
+                stringResource(R.string.yt_music_playlists),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -1413,7 +1414,7 @@ private fun PlaylistsTabContent(
                         .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No online playlists found", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.no_online_playlists_found), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             } else {
                 LazyVerticalGrid(
@@ -1473,7 +1474,7 @@ private fun LocalPlaylistDetailsBottomSheet(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        "${songs.size} songs",
+                        stringResource(R.string.songs_count, songs.size),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -1488,7 +1489,7 @@ private fun LocalPlaylistDetailsBottomSheet(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Delete Playlist",
+                        contentDescription = stringResource(R.string.delete_playlist),
                         tint = MaterialTheme.colorScheme.error
                     )
                 }
@@ -1518,7 +1519,7 @@ private fun LocalPlaylistDetailsBottomSheet(
                     ) {
                         Icon(Icons.Default.PlayArrow, null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Play All")
+                        Text(stringResource(R.string.play_all_title))
                     }
 
                     OutlinedButton(
@@ -1534,7 +1535,7 @@ private fun LocalPlaylistDetailsBottomSheet(
                     ) {
                         Icon(Icons.Default.Shuffle, null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Shuffle")
+                        Text(stringResource(R.string.shuffle))
                     }
                 }
 
@@ -1550,7 +1551,7 @@ private fun LocalPlaylistDetailsBottomSheet(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        "This playlist is empty",
+                        stringResource(R.string.this_playlist_is_empty),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -1637,7 +1638,7 @@ private fun LocalPlaylistDetailsBottomSheet(
                                 ) {
                                     Icon(
                                         Icons.Default.Close,
-                                        contentDescription = "Remove song",
+                                        contentDescription = stringResource(R.string.remove_song),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
@@ -1707,7 +1708,7 @@ private fun OnlinePlaylistCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    playlist.songCount ?: "Playlist",
+                    playlist.songCount ?: stringResource(R.string.playlist),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1
@@ -1741,7 +1742,7 @@ private fun PodcastsTabContent(nestedScrollConnection: androidx.compose.ui.input
             .padding(16.dp)
     ) {
         Text(
-            "Your Subscribed Podcasts",
+            stringResource(R.string.your_subscribed_podcasts),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
@@ -1770,7 +1771,7 @@ private fun PodcastsTabContent(nestedScrollConnection: androidx.compose.ui.input
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        "No podcasts found",
+                        stringResource(R.string.no_podcasts_found),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -1821,7 +1822,7 @@ private fun SongsTabContent(nestedScrollConnection: androidx.compose.ui.input.ne
             .padding(16.dp)
     ) {
         Text(
-            "Liked Songs (YT Music)",
+            stringResource(R.string.liked_songs_yt_music_),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
@@ -1836,7 +1837,7 @@ private fun SongsTabContent(nestedScrollConnection: androidx.compose.ui.input.ne
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                Text("No online songs found", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.no_online_songs_found), color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         } else {
             LazyColumn(
@@ -1922,7 +1923,7 @@ private fun AlbumsTabContent(nestedScrollConnection: androidx.compose.ui.input.n
             .padding(16.dp)
     ) {
         Text(
-            "YT Music Albums",
+            stringResource(R.string.yt_music_albums),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
@@ -1937,7 +1938,7 @@ private fun AlbumsTabContent(nestedScrollConnection: androidx.compose.ui.input.n
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                Text("No online albums found", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.no_online_albums_found), color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         } else {
             LazyVerticalGrid(
@@ -2019,7 +2020,7 @@ private fun OnlineAlbumCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    album.artists.firstOrNull()?.name ?: "Unknown Artist",
+                    album.artists.firstOrNull()?.name ?: stringResource(R.string.unknown_artist),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1
@@ -2053,7 +2054,7 @@ private fun ArtistsTabContent(nestedScrollConnection: androidx.compose.ui.input.
             .padding(16.dp)
     ) {
         Text(
-            "Followed Artists (YT Music)",
+            stringResource(R.string.followed_artists_yt_music_),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
@@ -2068,7 +2069,7 @@ private fun ArtistsTabContent(nestedScrollConnection: androidx.compose.ui.input.
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                Text("No online artists found", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.no_online_artists_found), color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         } else {
             LazyVerticalGrid(
@@ -2152,7 +2153,7 @@ private fun OnlineArtistCard(
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
-            "Artist",
+            stringResource(R.string.field_artist),
             style = MaterialTheme.typography.bodySmall,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -2184,18 +2185,18 @@ private fun RecapTabContent(
             ) {
                 Icon(
                     imageVector = Icons.Default.BarChart,
-                    contentDescription = "No Stats",
+                    contentDescription = stringResource(R.string.no_stats),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     modifier = Modifier.size(64.dp)
                 )
                 Text(
-                    text = "Your Flow is warming up",
+                    text = stringResource(R.string.your_flow_is_warming_up),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "Start playing your favorite tracks, and your listening flow highlights will appear here!",
+                    text = stringResource(R.string.start_playing_your_favorite_tracks_and_your_listening_flow_highlights_will_appear_here_),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -2277,20 +2278,20 @@ private fun RecapTabContent(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "YOUR FLOW HIGHLIGHTS",
+                            text = stringResource(R.string.your_flow_highlights),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary,
                             letterSpacing = 2.sp
                         )
                         Text(
-                            text = "Your Personal Listening Recap",
+                            text = stringResource(R.string.your_personal_listening_recap),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "A dynamic reflection of your musical journey on SpatialFlow.",
+                            text = stringResource(R.string.a_dynamic_reflection_of_your_musical_journey_on_spatialflow_),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -2323,17 +2324,17 @@ private fun RecapTabContent(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Headset,
-                                contentDescription = "Minutes Played",
+                                contentDescription = stringResource(R.string.minutes_played),
                                 tint = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                             Text(
-                                text = "${data.totalMinutes} min",
+                                text = stringResource(R.string.min, data.totalMinutes),
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Black,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                             Text(
-                                text = "Total listen time",
+                                text = stringResource(R.string.total_listen_time),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                             )
@@ -2362,7 +2363,7 @@ private fun RecapTabContent(
                         ) {
                             Icon(
                                 painter = painterResource(id = moodIconRes),
-                                contentDescription = "Peak Vibe",
+                                contentDescription = stringResource(R.string.peak_vibe),
                                 tint = MaterialTheme.colorScheme.onTertiaryContainer,
                                 modifier = Modifier.size(24.dp)
                             )
@@ -2385,7 +2386,7 @@ private fun RecapTabContent(
             // Top Songs Ranked Shelf
             item {
                 Text(
-                    text = "Top Played Songs",
+                    text = stringResource(R.string.top_played_songs),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Black,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -2485,7 +2486,7 @@ private fun RecapTabContent(
                                 if (!heroSong.thumbnailUrl.isNullOrEmpty()) {
                                     AsyncImage(
                                         model = heroSong.thumbnailUrl,
-                                        contentDescription = "Cover Art",
+                                        contentDescription = stringResource(R.string.cover_art),
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier.fillMaxSize()
                                     )
@@ -2498,7 +2499,7 @@ private fun RecapTabContent(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.MusicNote,
-                                            contentDescription = "Placeholder",
+                                            contentDescription = stringResource(R.string.placeholder),
                                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.size(36.dp)
                                         )
@@ -2518,7 +2519,7 @@ private fun RecapTabContent(
                                     modifier = Modifier.wrapContentSize()
                                 ) {
                                     Text(
-                                        text = "YOUR #1 TRACK",
+                                        text = stringResource(R.string.your_1_track),
                                         style = MaterialTheme.typography.labelSmall,
                                         fontWeight = FontWeight.Bold,
                                         color = badgeTextColor,
@@ -2539,7 +2540,7 @@ private fun RecapTabContent(
                                     color = artistColor
                                 )
                                 Text(
-                                    text = "Played ${heroSong.count} times",
+                                    text = stringResource(R.string.played_times, heroSong.count),
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = FontWeight.SemiBold,
                                     color = playedCountColor
@@ -2567,7 +2568,7 @@ private fun RecapTabContent(
                                 if (!song.thumbnailUrl.isNullOrEmpty()) {
                                     AsyncImage(
                                         model = song.thumbnailUrl,
-                                        contentDescription = "Cover",
+                                        contentDescription = stringResource(R.string.cover),
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier.fillMaxSize()
                                     )
@@ -2578,7 +2579,7 @@ private fun RecapTabContent(
                         },
                         trailingContent = {
                             Text(
-                                text = "${song.count} plays",
+                                text = stringResource(R.string.plays, song.count),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
@@ -2619,7 +2620,7 @@ private fun RecapTabContent(
             if (data.topArtists.isNotEmpty()) {
                 item {
                     Text(
-                        text = "Your Top Artists",
+                        text = stringResource(R.string.your_top_artists),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Black,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -2652,7 +2653,7 @@ private fun RecapTabContent(
                                     if (!imageUrl.isNullOrEmpty()) {
                                         AsyncImage(
                                             model = imageUrl,
-                                            contentDescription = "Artist picture",
+                                            contentDescription = stringResource(R.string.artist_picture),
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier.fillMaxSize()
                                         )
@@ -2670,7 +2671,7 @@ private fun RecapTabContent(
                                     textAlign = TextAlign.Center
                                 )
                                 Text(
-                                    text = "${item.count} songs played",
+                                    text = stringResource(R.string.songs_played, item.count),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     textAlign = TextAlign.Center

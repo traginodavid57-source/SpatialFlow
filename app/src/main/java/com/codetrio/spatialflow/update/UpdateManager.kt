@@ -15,6 +15,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.codetrio.spatialflow.R
 import com.google.android.material.snackbar.Snackbar
 
 class UpdateManager(private val context: Context) {
@@ -31,14 +32,14 @@ class UpdateManager(private val context: Context) {
     // CHECK FOR UPDATE
     // -----------------------------------------------------
     fun checkForUpdate(rootView: View, currentVersion: String) {
-        showSnackbarAnchored(rootView, "Checking for updates...", Snackbar.LENGTH_SHORT)
+        showSnackbarAnchored(rootView, context.getString(R.string.checking_for_updates_), Snackbar.LENGTH_SHORT)
 
         Thread {
             val release: GitHubReleaseClient.ReleaseInfo? = client.latestRelease
 
             if (release == null) {
                 runOnUi {
-                    showSnackbarAnchored(rootView, "Failed to check for updates", Snackbar.LENGTH_LONG)
+                    showSnackbarAnchored(rootView, context.getString(R.string.failed_to_check_for_updates), Snackbar.LENGTH_LONG)
                 }
                 return@Thread
             }
@@ -50,7 +51,7 @@ class UpdateManager(private val context: Context) {
                     promptUpdate(rootView, release)
                     showUpdateNotification(release.tagName, release.changelog ?: "", release.apkUrl ?: "")
                 } else {
-                    showSnackbarAnchored(rootView, "You're on the latest version! 🎉", Snackbar.LENGTH_LONG)
+                    showSnackbarAnchored(rootView, context.getString(R.string.you_re_on_the_latest_version_), Snackbar.LENGTH_LONG)
                 }
             }
         }.start()
@@ -88,15 +89,15 @@ class UpdateManager(private val context: Context) {
             val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
             if (dm == null) {
                 runOnUi {
-                    showSnackbarAnchored(rootView, "Download Manager not available", Snackbar.LENGTH_LONG)
+                    showSnackbarAnchored(rootView, context.getString(R.string.download_manager_not_available), Snackbar.LENGTH_LONG)
                 }
                 return -1L
             }
 
             val uri = Uri.parse(apkUrl)
             val request = DownloadManager.Request(uri).apply {
-                setTitle("SpatialFlow Update")
-                setDescription("Downloading latest version...")
+                setTitle(context.getString(R.string.spatialflow_update))
+                setDescription(context.getString(R.string.downloading_latest_version_))
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                 val filename = "SpatialFlow-update.apk"
                 setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, filename)
@@ -111,8 +112,8 @@ class UpdateManager(private val context: Context) {
                 .apply()
 
             runOnUi {
-                val sb = Snackbar.make(rootView, "Downloading update...", Snackbar.LENGTH_LONG)
-                sb.setAction("View") {
+                val sb = Snackbar.make(rootView, context.getString(R.string.downloading_update_), Snackbar.LENGTH_LONG)
+                sb.setAction(context.getString(R.string.view)) {
                     val intent = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS).apply {
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }
@@ -124,7 +125,7 @@ class UpdateManager(private val context: Context) {
         } catch (e: Exception) {
             Log.e(TAG, "Download failed", e)
             runOnUi {
-                showSnackbarAnchored(rootView, "Download failed. Try again.", Snackbar.LENGTH_LONG)
+                showSnackbarAnchored(rootView, context.getString(R.string.download_failed_try_again_), Snackbar.LENGTH_LONG)
             }
             return -1L
         }
@@ -134,10 +135,10 @@ class UpdateManager(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 "spatialflow_updates",
-                "App Updates",
+                context.getString(R.string.app_updates),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Notifies when a new app update is available"
+                description = context.getString(R.string.notifies_when_a_new_app_update_is_available)
             }
             val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
@@ -169,8 +170,8 @@ class UpdateManager(private val context: Context) {
 
         val builder = NotificationCompat.Builder(context, "spatialflow_updates")
             .setSmallIcon(com.codetrio.spatialflow.R.drawable.ic_applogo)
-            .setContentTitle("Update Available")
-            .setContentText("Version $tagName is available to download.")
+            .setContentTitle(context.getString(R.string.update_available))
+            .setContentText(context.getString(R.string.version_is_available_to_download_, tagName))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -180,7 +181,7 @@ class UpdateManager(private val context: Context) {
             .setShowWhen(true)
             .addAction(
                 com.codetrio.spatialflow.R.drawable.ic_download,
-                "Update Now",
+                context.getString(R.string.update_now),
                 pendingIntent
             )
 

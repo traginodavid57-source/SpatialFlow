@@ -93,6 +93,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -403,7 +404,7 @@ fun DestructiveActionRow(
         ) {
             Icon(Icons.Default.PlaylistAdd, null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
             Spacer(Modifier.width(8.dp))
-            Text("Add to Playlist", style = MaterialTheme.typography.labelLarge, fontFamily = GoogleSansFlex, color = MaterialTheme.colorScheme.onSecondaryContainer)
+            Text(stringResource(R.string.add_to_playlist), style = MaterialTheme.typography.labelLarge, fontFamily = GoogleSansFlex, color = MaterialTheme.colorScheme.onSecondaryContainer)
         }
 
         // Delete Button
@@ -422,7 +423,7 @@ fun DestructiveActionRow(
         ) {
             Icon(Icons.Filled.DeleteOutline, null, tint = MaterialTheme.colorScheme.onErrorContainer)
             Spacer(Modifier.width(8.dp))
-            Text("Delete", style = MaterialTheme.typography.labelLarge, fontFamily = GoogleSansFlex, color = MaterialTheme.colorScheme.onErrorContainer)
+            Text(stringResource(R.string.delete), style = MaterialTheme.typography.labelLarge, fontFamily = GoogleSansFlex, color = MaterialTheme.colorScheme.onErrorContainer)
         }
     }
 }
@@ -438,7 +439,7 @@ fun LocalPlaylistPickerDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                "Add to Playlist",
+                stringResource(R.string.add_to_playlist),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleLarge
             )
@@ -457,7 +458,7 @@ fun LocalPlaylistPickerDialog(
                 ) {
                     Icon(Icons.Default.Add, null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Create New Playlist")
+                    Text(stringResource(R.string.create_new_playlist))
                 }
 
                 if (playlists.isEmpty()) {
@@ -469,7 +470,7 @@ fun LocalPlaylistPickerDialog(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            "No playlists yet",
+                            stringResource(R.string.no_playlists_yet),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -512,7 +513,7 @@ fun LocalPlaylistPickerDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )
@@ -528,7 +529,7 @@ fun CreateLocalPlaylistDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                "New Playlist",
+                stringResource(R.string.new_playlist),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleLarge
             )
@@ -537,7 +538,7 @@ fun CreateLocalPlaylistDialog(
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Playlist Name") },
+                label = { Text(stringResource(R.string.playlist_name)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -551,12 +552,12 @@ fun CreateLocalPlaylistDialog(
                 },
                 enabled = name.isNotBlank()
             ) {
-                Text("Create")
+                Text(stringResource(R.string.create))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )
@@ -591,7 +592,7 @@ fun HeaderSection(
             
             Column(Modifier.weight(1f)) {
                 Text(
-                    song?.title ?: "Unknown",
+                    song?.title ?: stringResource(R.string.unknown),
                     style = MaterialTheme.typography.headlineSmall,
                     fontFamily = GoogleSansFlex,
                     fontWeight = FontWeight.ExtraBold,
@@ -599,7 +600,7 @@ fun HeaderSection(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    song?.artist ?: "Unknown Artist",
+                    song?.artist ?: stringResource(R.string.unknown_artist),
                     style = MaterialTheme.typography.bodyMedium,
                     fontFamily = GoogleSansFlex,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -655,7 +656,7 @@ fun HeaderSection(
             Spacer(modifier = Modifier.height(12.dp))
             
             Text(
-                song?.title ?: "Unknown",
+                song?.title ?: stringResource(R.string.unknown),
                 style = MaterialTheme.typography.titleMedium,
                 fontFamily = GoogleSansFlex,
                 fontWeight = FontWeight.ExtraBold,
@@ -665,7 +666,7 @@ fun HeaderSection(
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                song?.artist ?: "Unknown Artist",
+                song?.artist ?: stringResource(R.string.unknown_artist),
                 style = MaterialTheme.typography.bodySmall,
                 fontFamily = GoogleSansFlex,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -735,7 +736,7 @@ fun ActionButtonRow1(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Filled.PlayArrow, null, modifier = Modifier.size(28.dp), tint = MaterialTheme.colorScheme.onPrimaryContainer)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Play", color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 20.sp, fontWeight = FontWeight.Medium, fontFamily = GoogleSansFlex)
+                Text(stringResource(R.string.play), color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 20.sp, fontWeight = FontWeight.Medium, fontFamily = GoogleSansFlex)
             }
         }
 
@@ -834,7 +835,7 @@ fun ActionButtonRow2(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Queue",
+                    text = stringResource(R.string.queue),
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
@@ -881,7 +882,7 @@ fun ActionButtonRow2(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Next",
+                    text = stringResource(R.string.next),
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
@@ -932,7 +933,7 @@ fun ActionButtonRow2(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = if (isOnline) "Download" else "Offline",
+                    text = if (isOnline) stringResource(R.string.download) else stringResource(R.string.offline),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = GoogleSansFlex
@@ -985,7 +986,7 @@ fun ExpressiveTabSwitcher(selectedTab: BottomSheetTab, onTabSelected: (BottomShe
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "OPTIONS",
+                        text = stringResource(R.string.options_heading),
                         color = if (selectedTab == BottomSheetTab.OPTIONS) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
@@ -1010,7 +1011,7 @@ fun ExpressiveTabSwitcher(selectedTab: BottomSheetTab, onTabSelected: (BottomShe
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "INFO",
+                        text = stringResource(R.string.info_heading),
                         color = if (selectedTab == BottomSheetTab.INFO) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
@@ -1029,22 +1030,22 @@ fun InfoContent(song: SongItem?) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         InfoRow(
-            label = "Duration",
+            label = stringResource(R.string.duration),
             value = song?.getFormattedDuration() ?: "03:18",
             icon = Icons.Filled.DateRange
         )
         InfoRow(
-            label = "Album",
+            label = stringResource(R.string.field_album),
             value = song?.title ?: "Animals x Starboy",
             icon = Icons.Filled.Face
         )
         InfoRow(
-            label = "Artist",
-            value = song?.artist ?: "Unknown Artist",
+            label = stringResource(R.string.field_artist),
+            value = song?.artist ?: stringResource(R.string.unknown_artist),
             icon = Icons.Filled.Person
         )
         InfoRow(
-            label = "Path",
+            label = stringResource(R.string.path),
             value = song?.path ?: "/storage/emulated/0/Download/Seal/Audio/Animals x Starboy.mp3",
             icon = Icons.Filled.Menu
         )

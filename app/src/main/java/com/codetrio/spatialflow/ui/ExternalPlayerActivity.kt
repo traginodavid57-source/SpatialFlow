@@ -58,6 +58,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -66,6 +67,7 @@ import androidx.media3.common.Player
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.codetrio.spatialflow.MainActivity
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.service.AudioPlaybackService
 import com.codetrio.spatialflow.ui.player.WavyMusicSlider
 import com.codetrio.spatialflow.ui.theme.SpatialFlowTheme
@@ -91,9 +93,9 @@ class ExternalPlayerActivity : ComponentActivity() {
     private var isTransitioningToFullPlayer = false
 
     // Metadata States
-    private var songTitle = mutableStateOf("External Track")
-    private var songArtist = mutableStateOf("Loading...")
-    private var songAlbum = mutableStateOf("External Source")
+    private val songTitle by lazy { mutableStateOf(getString(R.string.external_track)) }
+    private val songArtist by lazy { mutableStateOf(getString(R.string.loading_)) }
+    private val songAlbum by lazy { mutableStateOf(getString(R.string.external_source)) }
     private var thumbnailBitmap = mutableStateOf<Bitmap?>(null)
 
     // Service Connection
@@ -178,7 +180,7 @@ class ExternalPlayerActivity : ComponentActivity() {
 
     private fun loadAllMetadata(uri: Uri) {
         // 1. Immediate fallback: Resolve display filename so the UI displays text instantly
-        var initialTitle = "External Track"
+        var initialTitle = getString(R.string.external_track)
         if ("content" == uri.scheme) {
             try {
                 contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
@@ -194,7 +196,7 @@ class ExternalPlayerActivity : ComponentActivity() {
                 Log.e(TAG, "Immediate metadata filename query failed", e)
             }
         } else if ("file" == uri.scheme) {
-            initialTitle = uri.lastPathSegment ?: "File Audio"
+            initialTitle = uri.lastPathSegment ?: getString(R.string.file_audio)
         }
 
         // Clean track label file extension if existing
@@ -226,8 +228,8 @@ class ExternalPlayerActivity : ComponentActivity() {
                     if (!realTitle.isNullOrBlank()) {
                         songTitle.value = realTitle
                     }
-                    songArtist.value = if (!realArtist.isNullOrBlank()) realArtist else "Unknown Artist"
-                    songAlbum.value = if (!realAlbum.isNullOrBlank()) realAlbum else "Unknown Album"
+                    songArtist.value = if (!realArtist.isNullOrBlank()) realArtist else getString(R.string.unknown_artist)
+                    songAlbum.value = if (!realAlbum.isNullOrBlank()) realAlbum else getString(R.string.unknown_album)
 
                     if (bitmap != null) {
                         thumbnailBitmap.value = bitmap
@@ -236,8 +238,8 @@ class ExternalPlayerActivity : ComponentActivity() {
             } catch (e: Exception) {
                 Log.e(TAG, "Failed running deep ID3 metadata background extractor", e)
                 withContext(Dispatchers.Main) {
-                    songArtist.value = "External Source"
-                    songAlbum.value = "Unknown Album"
+                    songArtist.value = getString(R.string.external_source)
+                    songAlbum.value = getString(R.string.unknown_album)
                 }
             } finally {
                 try {
@@ -398,7 +400,7 @@ fun PopupPlayerContent(
                                 .data(artBitmap)
                                 .crossfade(true)
                                 .build(),
-                            contentDescription = "Album Art",
+                            contentDescription = stringResource(R.string.album_art),
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
@@ -409,7 +411,7 @@ fun PopupPlayerContent(
                                 .data(uri) // Backstop fallback to raw parser
                                 .crossfade(true)
                                 .build(),
-                            contentDescription = "Album Art Fallback",
+                            contentDescription = stringResource(R.string.album_art_fallback),
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
@@ -510,7 +512,7 @@ fun PopupPlayerContent(
 
             // Bottom Full-Player Gateway
             ExpressiveActionButton(
-                text = "Open full player",
+                text = stringResource(R.string.open_full_player),
                 onClick = onOpenFullPlayer,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -543,7 +545,7 @@ fun ExpressivePlayPauseButton(
     ) {
         Icon(
             imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-            contentDescription = "Play/Pause",
+            contentDescription = stringResource(R.string.play_pause),
             modifier = Modifier.size(36.dp) // Prominent icon size
         )
     }

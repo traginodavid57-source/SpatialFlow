@@ -40,12 +40,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.core.content.FileProvider
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.ui.theme.SpatialFlowTheme
 import com.codetrio.spatialflow.ui.explore.shimmerEffect
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -215,9 +217,9 @@ fun UpdateBottomSheetContent(
     val currentVersionName = remember(context) {
         try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            packageInfo.versionName ?: "Unknown"
+            packageInfo.versionName ?: context.getString(R.string.unknown)
         } catch (e: Exception) {
-            "Unknown"
+            context.getString(R.string.unknown)
         }
     }
     val localImageLoader = remember(context) {
@@ -365,7 +367,7 @@ fun UpdateBottomSheetContent(
                         .crossfade(true)
                         .build(),
                     imageLoader = localImageLoader,
-                    contentDescription = "Update Animation",
+                    contentDescription = stringResource(R.string.update_animation),
                     onState = { state ->
                         isGifLoading = state !is coil.compose.AsyncImagePainter.State.Success
                         if (state is coil.compose.AsyncImagePainter.State.Error && currentGifUrl != DEFAULT_GIF_URL) {
@@ -411,7 +413,7 @@ fun UpdateBottomSheetContent(
             }
 
             Text(
-                text = "New Update Available",
+                text = stringResource(R.string.new_update_available),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -432,7 +434,7 @@ fun UpdateBottomSheetContent(
             ) {
                 Column {
                     Text(
-                        text = "Current",
+                        text = stringResource(R.string.current),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                     )
@@ -453,7 +455,7 @@ fun UpdateBottomSheetContent(
 
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "Update",
+                        text = stringResource(R.string.update),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                     )
@@ -580,7 +582,7 @@ fun UpdateBottomSheetContent(
                                     onClick = onLaterClick
                                 ) {
                                     Text(
-                                        text = "Later",
+                                        text = stringResource(R.string.later),
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -600,7 +602,7 @@ fun UpdateBottomSheetContent(
                                     contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
                                 ) {
                                     Text(
-                                        text = "Update Now",
+                                        text = stringResource(R.string.update_now),
                                         style = MaterialTheme.typography.labelLarge,
                                         fontWeight = FontWeight.ExtraBold
                                     )
@@ -616,7 +618,7 @@ fun UpdateBottomSheetContent(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "Downloading update...",
+                                text = stringResource(R.string.downloading_update_),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -694,7 +696,7 @@ fun UpdateBottomSheetContent(
                                 modifier = Modifier.align(Alignment.End)
                             ) {
                                 Text(
-                                    text = "Cancel",
+                                    text = stringResource(R.string.cancel),
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.error
                                 )
@@ -709,7 +711,7 @@ fun UpdateBottomSheetContent(
                             horizontalAlignment = Alignment.Start
                         ) {
                             Text(
-                                text = "Download Complete!",
+                                text = stringResource(R.string.download_complete_2),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -727,7 +729,7 @@ fun UpdateBottomSheetContent(
                                     contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
                                 ) {
                                     Text(
-                                        text = "Install Now",
+                                        text = stringResource(R.string.install_now),
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
@@ -742,7 +744,7 @@ fun UpdateBottomSheetContent(
                             horizontalAlignment = Alignment.Start
                         ) {
                             Text(
-                                text = "Download Failed",
+                                text = stringResource(R.string.download_failed),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.error
@@ -760,7 +762,7 @@ fun UpdateBottomSheetContent(
                                     contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
                                 ) {
                                     Text(
-                                        text = "Try Again",
+                                        text = stringResource(R.string.try_again),
                                         fontWeight = FontWeight.Bold
                                     )
                                 }

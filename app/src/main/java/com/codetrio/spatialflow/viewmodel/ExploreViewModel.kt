@@ -6,6 +6,7 @@ import androidx.compose.runtime.Stable
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.data.innertube.AlbumPage
 import com.codetrio.spatialflow.data.innertube.ArtistPage
 import com.codetrio.spatialflow.data.innertube.HomeSection
@@ -317,10 +318,10 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
             } else if (playlistId != null) {
                 loadPlaylist(playlistId)
             } else {
-                sendEvent(ExploreEvent.ShowSnackbar(com.codetrio.spatialflow.ui.UiText.DynamicString("Invalid YouTube link")))
+                sendEvent(ExploreEvent.ShowSnackbar(com.codetrio.spatialflow.ui.UiText.DynamicString(getApplication<Application>().getString(R.string.invalid_youtube_link))))
             }
         } catch (e: Exception) {
-            sendEvent(ExploreEvent.ShowSnackbar(com.codetrio.spatialflow.ui.UiText.DynamicString("Failed to parse link")))
+            sendEvent(ExploreEvent.ShowSnackbar(com.codetrio.spatialflow.ui.UiText.DynamicString(getApplication<Application>().getString(R.string.failed_to_parse_link))))
         }
     }
 
@@ -391,7 +392,7 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                 }
                 result.onFailure { e ->
                     Log.e(TAG, "Search failed", e)
-                    _uiState.update { it.copy(error = "Search failed: ${e.message}") }
+                    _uiState.update { it.copy(error = getApplication<Application>().getString(R.string.search_failed, e.message)) }
                 }
             } catch (e: Exception) {
                 if (e is kotlinx.coroutines.CancellationException) throw e
@@ -519,13 +520,13 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                 val responses = awaitAll(playTask, songTask, albumTask)
                 
                 responses[0].onSuccess { res ->
-                    if (res.items.isNotEmpty()) sections.add(HomeSection("$mood Curations", res.items.shuffled().take(12)))
+                    if (res.items.isNotEmpty()) sections.add(HomeSection(getApplication<Application>().getString(R.string.curations, mood), res.items.shuffled().take(12)))
                 }
                 responses[1].onSuccess { res ->
-                    if (res.items.isNotEmpty()) sections.add(HomeSection("Top $mood Tracks", res.items.take(20)))
+                    if (res.items.isNotEmpty()) sections.add(HomeSection(getApplication<Application>().getString(R.string.top_tracks, mood), res.items.take(20)))
                 }
                 responses[2].onSuccess { res ->
-                    if (res.items.isNotEmpty()) sections.add(HomeSection("$mood Spotlight", res.items.shuffled().take(12)))
+                    if (res.items.isNotEmpty()) sections.add(HomeSection(getApplication<Application>().getString(R.string.spotlight, mood), res.items.shuffled().take(12)))
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to synthesize mood feed", e)
@@ -721,7 +722,7 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                     }
                     prefetchUrls(listOfNotNull(res.album.thumbnailUrl) + res.songs.map { it.thumbnailUrl })
                 }
-                result.onFailure { _uiState.update { it.copy(error = "Failed to load album") } }
+                result.onFailure { _uiState.update { it.copy(error = getApplication<Application>().getString(R.string.failed_to_load_album)) } }
             } finally {
                 _uiState.update { it.copy(isLoadingDetail = false) }
             }
@@ -745,7 +746,7 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                     prefetchUrls(listOfNotNull(res.artist.thumbnailUrl))
                     prefetchThumbnails(res.sections.flatMap { it.items.take(4) })
                 }
-                result.onFailure { _uiState.update { it.copy(error = "Failed to load artist") } }
+                result.onFailure { _uiState.update { it.copy(error = getApplication<Application>().getString(R.string.failed_to_load_artist)) } }
             } finally {
                 _uiState.update { it.copy(isLoadingDetail = false) }
             }
@@ -766,7 +767,7 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                     }
                     prefetchUrls(listOfNotNull(res.playlist.thumbnailUrl) + res.songs.map { it.thumbnailUrl })
                 }
-                result.onFailure { _uiState.update { it.copy(error = "Failed to load playlist") } }
+                result.onFailure { _uiState.update { it.copy(error = getApplication<Application>().getString(R.string.failed_to_load_playlist)) } }
             } finally {
                 _uiState.update { it.copy(isLoadingDetail = false) }
             }
@@ -788,7 +789,7 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                     }
                     prefetchThumbnails(res.items.take(12))
                 }
-                result.onFailure { _uiState.update { it.copy(error = "Failed to load section") } }
+                result.onFailure { _uiState.update { it.copy(error = getApplication<Application>().getString(R.string.failed_to_load_section)) } }
             } finally {
                 _uiState.update { it.copy(isLoadingDetail = false) }
             }
@@ -809,7 +810,7 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                     }
                 }
                 result.onFailure {
-                    _uiState.update { it.copy(error = "Failed to load Moods & Genres") }
+                    _uiState.update { it.copy(error = getApplication<Application>().getString(R.string.failed_to_load_moods_and_genres)) }
                 }
             } finally {
                 _uiState.update { it.copy(isLoadingDetail = false) }
@@ -831,7 +832,7 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                     }
                 }
                 result.onFailure {
-                    _uiState.update { it.copy(error = "Failed to load mood category details") }
+                    _uiState.update { it.copy(error = getApplication<Application>().getString(R.string.failed_to_load_mood_category_details)) }
                 }
             } finally {
                 _uiState.update { it.copy(isLoadingDetail = false) }
@@ -885,7 +886,7 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                     }
                 }
                 result.onFailure { 
-                    _uiState.update { it.copy(error = "Failed to start radio") }
+                    _uiState.update { it.copy(error = getApplication<Application>().getString(R.string.failed_to_start_radio)) }
                 }
             } finally {
                 _uiState.update { it.copy(isLoadingStream = false) }
@@ -921,11 +922,11 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                     if (radioSongs.isNotEmpty()) {
                         playOnlineSongWithQueue(radioSongs.first(), radioSongs, 0)
                     } else {
-                        com.codetrio.spatialflow.ui.SnackbarController.showMessage("No radio station available")
+                        com.codetrio.spatialflow.ui.SnackbarController.showMessage(getApplication<Application>().getString(R.string.no_radio_station_available))
                     }
                 }
                 result.onFailure { 
-                    com.codetrio.spatialflow.ui.SnackbarController.showMessage("Failed to start radio")
+                    com.codetrio.spatialflow.ui.SnackbarController.showMessage(getApplication<Application>().getString(R.string.failed_to_start_radio))
                 }
             } finally {
                 _uiState.update { it.copy(isLoadingStream = false) }
@@ -961,12 +962,12 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
                         is SearchItem.Album -> item.album.title
                         is SearchItem.Artist -> item.artist.title
                     }
-                    com.codetrio.spatialflow.ui.SnackbarController.showMessage("'$name' saved to Library!")
+                    com.codetrio.spatialflow.ui.SnackbarController.showMessage(getApplication<Application>().getString(R.string.saved_to_library_, name))
                 }.onFailure {
-                    com.codetrio.spatialflow.ui.SnackbarController.showMessage("Failed to save to Library")
+                    com.codetrio.spatialflow.ui.SnackbarController.showMessage(getApplication<Application>().getString(R.string.failed_to_save_to_library))
                 }
             } catch (e: Exception) {
-                com.codetrio.spatialflow.ui.SnackbarController.showMessage("Error saving to Library")
+                com.codetrio.spatialflow.ui.SnackbarController.showMessage(getApplication<Application>().getString(R.string.error_saving_to_library))
             }
         }
     }

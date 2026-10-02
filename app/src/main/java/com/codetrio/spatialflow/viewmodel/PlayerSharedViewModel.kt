@@ -165,10 +165,10 @@ class PlayerSharedViewModel @Inject constructor(
         val peakHour = hourCounts.maxByOrNull { it.value }?.key ?: 12
         
         val (peakMood, peakMoodDescription) = when (peakHour) {
-            in 5..11 -> "Morning Spark" to "You find your energy in morning melodies."
-            in 12..16 -> "Afternoon Groove" to "Midday rhythms keep you focused and moving."
-            in 17..21 -> "Evening Harmony" to "Winding down with perfect sunset soundtracks."
-            else -> "Midnight Mystique" to "Late night is when your true music flow awakens."
+            in 5..11 -> "Morning Spark" to getApplication<Application>().getString(R.string.you_find_your_energy_in_morning_melodies_)
+            in 12..16 -> "Afternoon Groove" to getApplication<Application>().getString(R.string.midday_rhythms_keep_you_focused_and_moving_)
+            in 17..21 -> "Evening Harmony" to getApplication<Application>().getString(R.string.winding_down_with_perfect_sunset_soundtracks_)
+            else -> "Midnight Mystique" to getApplication<Application>().getString(R.string.late_night_is_when_your_true_music_flow_awakens_)
         }
         
         ListeningRecap(
@@ -517,7 +517,7 @@ class PlayerSharedViewModel @Inject constructor(
     private val _audioServiceState = MutableStateFlow<AudioPlaybackService?>(null)
     val audioServiceState: StateFlow<AudioPlaybackService?> = _audioServiceState.asStateFlow()
 
-    private val _likesCount = MutableStateFlow("Like")
+    private val _likesCount = MutableStateFlow(getApplication<Application>().getString(R.string.like))
     val likesCount: StateFlow<String> = _likesCount.asStateFlow()
     val likesCountFlow get() = likesCount
 
@@ -615,7 +615,7 @@ class PlayerSharedViewModel @Inject constructor(
     }
 
     private fun formatLikesCount(count: Int): String {
-        if (count <= 0) return "Like"
+        if (count <= 0) return getApplication<Application>().getString(R.string.like)
         if (count < 10_000) { // Under 10,000 likes, show the exact count with commas for interactive increment visibility (e.g. 1,234 -> 1,235)
             return String.format(Locale.US, "%,d", count)
         }
@@ -629,7 +629,7 @@ class PlayerSharedViewModel @Inject constructor(
 
     private fun updateLikesCountDisplay(userLiked: Boolean) {
         if (baseLikesCountInt <= 0) {
-            _likesCount.value = if (userLiked) "1" else "Like"
+            _likesCount.value = if (userLiked) "1" else getApplication<Application>().getString(R.string.like)
             return
         }
         val targetCount = if (userLiked) baseLikesCountInt + 1 else baseLikesCountInt
@@ -642,7 +642,7 @@ class PlayerSharedViewModel @Inject constructor(
         val videoId = song.videoId
         if (videoId.isNullOrEmpty()) {
             baseLikesCountInt = 0
-            _likesCount.value = "Like"
+            _likesCount.value = getApplication<Application>().getString(R.string.like)
             return
         }
 
@@ -651,7 +651,7 @@ class PlayerSharedViewModel @Inject constructor(
             try {
                 // Initialize default state
                 withContext(Dispatchers.Main) {
-                    _likesCount.value = "Like"
+                    _likesCount.value = getApplication<Application>().getString(R.string.like)
                 }
                 baseLikesCountInt = 0
 
@@ -961,7 +961,7 @@ class PlayerSharedViewModel @Inject constructor(
             .registerOnSharedPreferenceChangeListener(appSettingsPrefListener)
         bgScope.launch(Dispatchers.Main) {
             currentSong.collect { song ->
-                _likesCount.value = "Like"
+                _likesCount.value = getApplication<Application>().getString(R.string.like)
                 _isCurrentSongDisliked.value = false
                 _canvasArtwork.value = null
 
@@ -1648,7 +1648,7 @@ class PlayerSharedViewModel @Inject constructor(
 
         _isCurrentSongFavorite.value = favoritesManager?.isFavorite(song.id) ?: false
         baseLikesCountInt = 0
-        _likesCount.value = "Like"
+        _likesCount.value = getApplication<Application>().getString(R.string.like)
 
 
 

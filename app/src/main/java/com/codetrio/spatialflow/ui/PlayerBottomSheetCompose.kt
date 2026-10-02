@@ -83,6 +83,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
@@ -756,14 +757,14 @@ fun PlayerBottomSheetCompose(
                 onDismissRequest = { viewModel.dismissSignInDialog() },
                 title = {
                     Text(
-                        text = "Sign in Required",
+                        text = stringResource(R.string.sign_in_required),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 text = {
                     Text(
-                        text = "To like or dislike songs on YouTube Music, please connect your account in Settings. This enables full synchronization of liked tracks and personalization algorithms.",
+                        text = stringResource(R.string.to_like_or_dislike_songs_on_youtube_music_please_connect_your_account_in_settings_this_enables_full_synchronization_of_liked_tracks_and_personalization_algorithms_),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
@@ -774,12 +775,12 @@ fun PlayerBottomSheetCompose(
                             activity.navigateToSettings()
                         }
                     ) {
-                        Text(text = "Go to Settings", fontWeight = FontWeight.Bold)
+                        Text(text = stringResource(R.string.go_to_settings), fontWeight = FontWeight.Bold)
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { viewModel.dismissSignInDialog() }) {
-                        Text(text = "Cancel")
+                        Text(text = stringResource(R.string.cancel))
                     }
                 }
             )
@@ -1444,7 +1445,7 @@ private fun MiniPlayerContentInternal(
             IconButton(onClick = { viewModel.playPreviousSong() }) {
                 Icon(
                     painter = painterResource(R.drawable.ic_skip_previous),
-                    contentDescription = "Previous",
+                    contentDescription = stringResource(R.string.previous),
                     tint = contentColor,
                     modifier = Modifier.size(24.dp)
                 )
@@ -1460,7 +1461,7 @@ private fun MiniPlayerContentInternal(
             ) {
                 Icon(
                     painter = painterResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-                    contentDescription = "Play/Pause",
+                    contentDescription = stringResource(R.string.play_pause),
                     tint = contentColor,
                     modifier = Modifier.size(20.dp)
                 )
@@ -1469,7 +1470,7 @@ private fun MiniPlayerContentInternal(
             IconButton(onClick = { viewModel.playNextSong() }) {
                 Icon(
                     painter = painterResource(R.drawable.ic_skip_next),
-                    contentDescription = "Next",
+                    contentDescription = stringResource(R.string.next),
                     tint = contentColor,
                     modifier = Modifier.size(24.dp)
                 )

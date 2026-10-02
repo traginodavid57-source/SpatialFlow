@@ -90,6 +90,7 @@ package com.codetrio.spatialflow.ui.onboarding
     import androidx.compose.ui.layout.ContentScale
     import androidx.compose.ui.platform.LocalContext
     import androidx.compose.ui.res.painterResource
+    import androidx.compose.ui.res.stringResource
     import androidx.compose.ui.text.font.FontWeight
     import androidx.compose.ui.unit.dp
     import androidx.compose.ui.unit.sp
@@ -111,13 +112,13 @@ package com.codetrio.spatialflow.ui.onboarding
         val hasHaptics = remember { vibrator?.hasVibrator() == true }
         
         var isLoggedIn by remember { mutableStateOf(com.codetrio.spatialflow.data.innertube.AccountManager.isLoggedIn(context)) }
-        var userName by remember { mutableStateOf("Connected User") }
+        var userName by remember { mutableStateOf(context.getString(R.string.connected_user)) }
         var userProfileUrl by remember { mutableStateOf<String?>(null) }
         
         LaunchedEffect(isLoggedIn) {
             if (isLoggedIn) {
                 val result = com.codetrio.spatialflow.data.innertube.YouTubeMusic.accountProfile()
-                userName = result.getOrNull()?.name ?: "Connected User"
+                userName = result.getOrNull()?.name ?: context.getString(R.string.connected_user)
                 userProfileUrl = result.getOrNull()?.avatarUrl
             }
         }
@@ -305,7 +306,7 @@ package com.codetrio.spatialflow.ui.onboarding
                 if (imageUrl != null) {
                     coil.compose.AsyncImage(
                         model = imageUrl,
-                        contentDescription = "Background decoration",
+                        contentDescription = stringResource(R.string.background_decoration),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -315,7 +316,7 @@ package com.codetrio.spatialflow.ui.onboarding
                 } else if (drawableRes != null) {
                     Image(
                         painter = painterResource(id = drawableRes),
-                        contentDescription = "Background decoration",
+                        contentDescription = stringResource(R.string.background_decoration),
                         contentScale = ContentScale.Fit,
                         colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(iconTint),
                         modifier = Modifier
@@ -349,7 +350,7 @@ package com.codetrio.spatialflow.ui.onboarding
             iconTint = MaterialTheme.colorScheme.onSurface
         ) {
             Text(
-                text = "Welcome\nto SpatialFlow.",
+                text = stringResource(R.string.welcome_to_spatialflow_),
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Black,
                 fontSize = 42.sp,
@@ -364,7 +365,7 @@ package com.codetrio.spatialflow.ui.onboarding
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Lets setup the everything for you",
+                text = stringResource(R.string.lets_setup_the_everything_for_you),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Normal,
                 fontSize = 18.sp,
@@ -390,7 +391,7 @@ package com.codetrio.spatialflow.ui.onboarding
             iconTint = MaterialTheme.colorScheme.onSurface
         ) {
             Text(
-                text = "Your\nComplete\nEcosystem.",
+                text = stringResource(R.string.your_complete_ecosystem_),
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Black,
                 fontSize = 42.sp,
@@ -405,7 +406,7 @@ package com.codetrio.spatialflow.ui.onboarding
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Stream millions of tracks or play your local library, perfectly synced.",
+                text = stringResource(R.string.stream_millions_of_tracks_or_play_your_local_library_perfectly_synced_),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Normal,
                 fontSize = 18.sp,
@@ -434,7 +435,7 @@ package com.codetrio.spatialflow.ui.onboarding
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = "Stream",
+                    text = stringResource(R.string.stream),
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 32.sp,
@@ -447,7 +448,7 @@ package com.codetrio.spatialflow.ui.onboarding
                     }
                 )
                 Text(
-                    text = "Discover",
+                    text = stringResource(R.string.discover),
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 32.sp,
@@ -460,7 +461,7 @@ package com.codetrio.spatialflow.ui.onboarding
                     }
                 )
                 Text(
-                    text = "Sing Along.",
+                    text = stringResource(R.string.sing_along_),
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 32.sp,
@@ -475,7 +476,7 @@ package com.codetrio.spatialflow.ui.onboarding
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "Karaoke lyrics, powerful search, and offline downloads all in one place.",
+                text = stringResource(R.string.karaoke_lyrics_powerful_search_and_offline_downloads_all_in_one_place_),
                 style = MaterialTheme.typography.bodyLarge,
                 fontSize = 16.sp,
                 lineHeight = 24.sp,
@@ -503,7 +504,7 @@ package com.codetrio.spatialflow.ui.onboarding
             iconTint = MaterialTheme.colorScheme.onSurface
         ) {
             Text(
-                text = "Style it\nyour way.",
+                text = stringResource(R.string.style_it_your_way_),
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Black,
                 fontSize = 42.sp,
@@ -524,9 +525,9 @@ package com.codetrio.spatialflow.ui.onboarding
                 modifier = Modifier.fillMaxWidth()
             ) {
                 listOf(
-                    Triple("system", "System Default", Icons.Default.Settings),
-                    Triple("dark", "Dark Mode", Icons.Default.DarkMode),
-                    Triple("light", "Light Mode", Icons.Default.LightMode)
+                    Triple("system", stringResource(R.string.system_default), Icons.Default.Settings),
+                    Triple("dark", stringResource(R.string.setting_dark_mode), Icons.Default.DarkMode),
+                    Triple("light", stringResource(R.string.light_mode), Icons.Default.LightMode)
                 ).forEachIndexed { index, (mode, label, _) ->
                     Card(
                         onClick = { onThemeChanged(mode) },
@@ -555,7 +556,7 @@ package com.codetrio.spatialflow.ui.onboarding
                                 contentAlignment = Alignment.Center
                             ) {
                                 if (themeMode == mode) {
-                                    Icon(Icons.Default.Check, contentDescription = "Selected", tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(20.dp))
+                                    Icon(Icons.Default.Check, contentDescription = stringResource(R.string.selected), tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(20.dp))
                                 }
                             }
                             Spacer(modifier = Modifier.width(16.dp))
@@ -587,7 +588,7 @@ package com.codetrio.spatialflow.ui.onboarding
             iconTint = MaterialTheme.colorScheme.onSurface
         ) {
             Text(
-                text = "Navigate\nSeamlessly.",
+                text = stringResource(R.string.navigate_seamlessly_),
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Black,
                 fontSize = 42.sp,
@@ -621,7 +622,7 @@ package com.codetrio.spatialflow.ui.onboarding
                     tonalElevation = 0.dp,
                     windowInsets = androidx.compose.foundation.layout.WindowInsets(0.dp)
                 ) {
-                    listOf("Home" to Icons.Default.Home, "Search" to Icons.Default.Search, "Library" to Icons.Default.LibraryMusic).forEachIndexed { index, item ->
+                    listOf(stringResource(R.string.home) to Icons.Default.Home, stringResource(R.string.search) to Icons.Default.Search, stringResource(R.string.tab_library) to Icons.Default.LibraryMusic).forEachIndexed { index, item ->
                         val labelComposable: (@Composable () -> Unit)? = if (hideNavLabels) null else {
                             @Composable { Text(item.first) }
                         }
@@ -657,14 +658,14 @@ package com.codetrio.spatialflow.ui.onboarding
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Hide Nav Labels",
+                            text = stringResource(R.string.hide_nav_labels),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Remove text labels from the bottom navigation bar.",
+                            text = stringResource(R.string.onboarding_hide_labels_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                         )
@@ -697,14 +698,14 @@ package com.codetrio.spatialflow.ui.onboarding
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Dynamic Navbar",
+                            text = stringResource(R.string.dynamic_navbar),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Compact height with bold, elevated icons.",
+                            text = stringResource(R.string.onboarding_dynamic_navbar_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                         )
@@ -729,7 +730,7 @@ package com.codetrio.spatialflow.ui.onboarding
             iconTint = MaterialTheme.colorScheme.onSurface
         ) {
             Text(
-                text = "Sensory\nExperience.",
+                text = stringResource(R.string.sensory_experience_),
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Black,
                 fontSize = 42.sp,
@@ -763,14 +764,14 @@ package com.codetrio.spatialflow.ui.onboarding
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = "Music Haptics",
+                        text = stringResource(R.string.music_haptics),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Adjust the intensity of beat-synced vibrations.",
+                        text = stringResource(R.string.adjust_the_intensity_of_beat_synced_vibrations_),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                     )
@@ -804,7 +805,7 @@ package com.codetrio.spatialflow.ui.onboarding
             iconTint = MaterialTheme.colorScheme.onSurface
         ) {
             Text(
-                text = "Enable\nPermissions.",
+                text = stringResource(R.string.enable_permissions_),
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Black,
                 fontSize = 42.sp,
@@ -822,8 +823,8 @@ package com.codetrio.spatialflow.ui.onboarding
     
             // Audio Permission Card
             PermissionCard(
-                title = "Music Library",
-                description = "Access local audio files for offline playback.",
+                title = stringResource(R.string.music_library),
+                description = stringResource(R.string.access_local_audio_files_for_offline_playback_),
                 icon = Icons.Default.LibraryMusic,
                 isGranted = audioGranted,
                 pageOffsetProvider = pageOffsetProvider,
@@ -836,8 +837,8 @@ package com.codetrio.spatialflow.ui.onboarding
             // Notification Permission Card
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 PermissionCard(
-                    title = "Playback Notifications",
-                    description = "Control music from your lock screen.",
+                    title = stringResource(R.string.playback_notifications),
+                    description = stringResource(R.string.control_music_from_your_lock_screen_),
                     icon = Icons.Default.Notifications,
                     isGranted = notifGranted,
                     pageOffsetProvider = pageOffsetProvider,
@@ -849,8 +850,8 @@ package com.codetrio.spatialflow.ui.onboarding
     
             // Microphone Permission Card
             PermissionCard(
-                title = "Audio Engine",
-                description = "Required for immersive effects and synced lyrics.",
+                title = stringResource(R.string.audio_engine),
+                description = stringResource(R.string.required_for_immersive_effects_and_synced_lyrics_),
                 icon = Icons.Default.Mic,
                 isGranted = micGranted,
                 pageOffsetProvider = pageOffsetProvider,
@@ -903,7 +904,7 @@ package com.codetrio.spatialflow.ui.onboarding
                 ) {
                     Icon(
                         imageVector = if (isGranted) Icons.Default.Check else icon,
-                        contentDescription = "Permission icon",
+                        contentDescription = stringResource(R.string.permission_icon),
                         modifier = Modifier
                             .size(22.dp)
                             .graphicsLayer {
@@ -935,7 +936,7 @@ package com.codetrio.spatialflow.ui.onboarding
                     Spacer(modifier = Modifier.width(12.dp))
                     Icon(
                         imageVector = Icons.Default.ArrowForward,
-                        contentDescription = "Grant $title permission",
+                        contentDescription = stringResource(R.string.grant_permission, title),
                         modifier = Modifier.size(20.dp),
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -986,7 +987,7 @@ package com.codetrio.spatialflow.ui.onboarding
                 if (isLoggedIn) {
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
-                        text = "Welcome,\n$userName",
+                        text = stringResource(R.string.welcome_, userName),
                         style = MaterialTheme.typography.displayMedium,
                         fontWeight = FontWeight.Black,
                         fontSize = 42.sp,
@@ -1012,13 +1013,13 @@ package com.codetrio.spatialflow.ui.onboarding
                         Row(modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Login Successful", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.login_successful), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                         }
                     }
                     Spacer(modifier = Modifier.height(120.dp))
                 } else {
                     Text(
-                        text = "Sign In &\nSync.",
+                        text = stringResource(R.string.sign_in_and_sync_),
                         style = MaterialTheme.typography.displayMedium,
                         fontWeight = FontWeight.Black,
                         fontSize = 42.sp,
@@ -1035,7 +1036,7 @@ package com.codetrio.spatialflow.ui.onboarding
                     Spacer(modifier = Modifier.height(20.dp))
         
                     Text(
-                        text = "Connect your account to sync playlists, liked songs, and preferences across all your devices.",
+                        text = stringResource(R.string.connect_your_account_to_sync_playlists_liked_songs_and_preferences_across_all_your_devices_),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 24.sp,
@@ -1067,7 +1068,7 @@ package com.codetrio.spatialflow.ui.onboarding
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Continue with YouTube Music",
+                            text = stringResource(R.string.continue_with_youtube_music),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
@@ -1090,7 +1091,7 @@ package com.codetrio.spatialflow.ui.onboarding
                         shape = RoundedCornerShape(20.dp)
                     ) {
                         Text(
-                            text = "Continue as Guest",
+                            text = stringResource(R.string.continue_as_guest),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -1153,7 +1154,7 @@ package com.codetrio.spatialflow.ui.onboarding
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Setup Complete",
+                            text = stringResource(R.string.setup_complete),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold
@@ -1164,7 +1165,7 @@ package com.codetrio.spatialflow.ui.onboarding
                 Spacer(modifier = Modifier.height(20.dp))
     
                 Text(
-                    text = "Ready to\nFlow.",
+                    text = stringResource(R.string.ready_to_flow_),
                     style = MaterialTheme.typography.displayMedium,
                     fontWeight = FontWeight.Black,
                     fontSize = 42.sp,
@@ -1181,7 +1182,7 @@ package com.codetrio.spatialflow.ui.onboarding
                 Spacer(modifier = Modifier.height(20.dp))
     
                 Text(
-                    text = "Your library is fully initialized and the engine is primed. It's time to immerse yourself in the ultimate auditory experience.",
+                    text = stringResource(R.string.your_library_is_fully_initialized_and_the_engine_is_primed_it_s_time_to_immerse_yourself_in_the_ultimate_auditory_experience_),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 24.sp,
@@ -1279,7 +1280,7 @@ package com.codetrio.spatialflow.ui.onboarding
                     ) { targetPage ->
                         if (targetPage == 0) {
                             Text(
-                                text = "Let's Go!",
+                                text = stringResource(R.string.let_s_go_),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary,
@@ -1292,13 +1293,13 @@ package com.codetrio.spatialflow.ui.onboarding
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.ArrowBack,
-                                        contentDescription = "Back",
+                                        contentDescription = stringResource(R.string.back),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "Step $targetPage of ${pagerState.pageCount - 1}",
+                                    text = stringResource(R.string.step_of, targetPage, pagerState.pageCount - 1),
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -1319,8 +1320,8 @@ package com.codetrio.spatialflow.ui.onboarding
                         if (isFinish) {
                             androidx.compose.material3.ExtendedFloatingActionButton(
                                 onClick = onFinishClicked,
-                                text = { Text("Start Listening") },
-                                icon = { Icon(Icons.Default.Check, contentDescription = "Finish") },
+                                text = { Text(stringResource(R.string.start_listening)) },
+                                icon = { Icon(Icons.Default.Check, contentDescription = stringResource(R.string.finish)) },
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                 elevation = FloatingActionButtonDefaults.elevation(0.dp)
@@ -1343,7 +1344,7 @@ package com.codetrio.spatialflow.ui.onboarding
                             ) {
                                 Icon(
                                     Icons.Default.ArrowForward,
-                                    contentDescription = "Next",
+                                    contentDescription = stringResource(R.string.next),
                                     modifier = Modifier.rotate(-animatedRotation)
                                 )
                             }

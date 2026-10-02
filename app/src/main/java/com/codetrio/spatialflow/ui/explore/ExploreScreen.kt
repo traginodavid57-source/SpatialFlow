@@ -112,6 +112,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -123,6 +124,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.codetrio.spatialflow.MainActivity
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.data.innertube.HomeSection
 import com.codetrio.spatialflow.data.innertube.OnlineSong
 import com.codetrio.spatialflow.data.innertube.SearchFilter
@@ -937,7 +939,7 @@ fun ExploreScreen(
                                                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                                                             )
                                                             Text(
-                                                                text = "No results found for \"$searchQuery\"",
+                                                                text = stringResource(R.string.no_results_found_for, searchQuery),
                                                                 style = MaterialTheme.typography.bodyLarge,
                                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                                             )
@@ -996,7 +998,7 @@ fun ExploreScreen(
                                                                                 .padding(horizontal = 16.dp, vertical = 12.dp)
                                                                         ) {
                                                                             Text(
-                                                                                text = "Browse Categories",
+                                                                                text = stringResource(R.string.browse_categories),
                                                                                 style = MaterialTheme.typography.titleMedium,
                                                                                 fontWeight = FontWeight.Bold,
                                                                                 color = MaterialTheme.colorScheme.onSurface,
@@ -1008,7 +1010,7 @@ fun ExploreScreen(
                                                                                 horizontalArrangement = Arrangement.spacedBy(12.dp)
                                                                             ) {
                                                                                 CategoryCard(
-                                                                                    title = "New Releases",
+                                                                                    title = stringResource(R.string.new_releases),
                                                                                     icon = Icons.Default.MusicNote,
                                                                                     gradientColors = listOf(Color(0xFF2E1A47), Color(0xFF160B24)),
                                                                                     onClick = {
@@ -1019,7 +1021,7 @@ fun ExploreScreen(
                                                                                     modifier = Modifier.weight(1f)
                                                                                 )
                                                                                 CategoryCard(
-                                                                                    title = "Charts",
+                                                                                    title = stringResource(R.string.charts),
                                                                                     icon = Icons.Default.TrendingUp,
                                                                                     gradientColors = listOf(Color(0xFF4C1D1D), Color(0xFF240E0E)),
                                                                                     onClick = {
@@ -1038,7 +1040,7 @@ fun ExploreScreen(
                                                                                 horizontalArrangement = Arrangement.spacedBy(12.dp)
                                                                             ) {
                                                                                 CategoryCard(
-                                                                                    title = "Moods & Genres",
+                                                                                    title = stringResource(R.string.moods_and_genres),
                                                                                     icon = Icons.Default.Favorite,
                                                                                     gradientColors = listOf(Color(0xFF0F3040), Color(0xFF081820)),
                                                                                     onClick = {
@@ -1047,7 +1049,7 @@ fun ExploreScreen(
                                                                                     modifier = Modifier.weight(1f)
                                                                                 )
                                                                                 CategoryCard(
-                                                                                    title = "Podcasts",
+                                                                                    title = stringResource(R.string.podcasts),
                                                                                     icon = Icons.Default.Mic,
                                                                                     gradientColors = listOf(Color(0xFF4A1E30), Color(0xFF240F18)),
                                                                                     onClick = {
@@ -1181,7 +1183,7 @@ fun ExploreScreen(
                                                                             )
                                                                         )
                                                                         Text(
-                                                                            "Search for music",
+                                                                            stringResource(R.string.search_for_music),
                                                                             style = MaterialTheme.typography.titleMedium,
                                                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                                                         )
@@ -1191,7 +1193,7 @@ fun ExploreScreen(
                                                                             )
                                                                         )
                                                                         OutlinedButton(onClick = { viewModel.refreshHomeFeed() }) {
-                                                                            Text("Load Home Feed")
+                                                                            Text(stringResource(R.string.load_home_feed))
                                                                         }
                                                                     }
                                                                 }
@@ -1213,7 +1215,7 @@ fun ExploreScreen(
         error?.let { errorMsg ->
             Snackbar(
                 modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp),
-                action = { TextButton(onClick = { viewModel.clearError() }) { Text("OK") } }
+                action = { TextButton(onClick = { viewModel.clearError() }) { Text(stringResource(R.string.ok)) } }
             ) { Text(errorMsg) }
         }
     }
@@ -1248,7 +1250,7 @@ fun ExploreScreen(
                 playerSharedViewModel.addSongToLocalPlaylist(playlist.id, songToAddPlaylist!!)
                 showAddToPlaylistDialog = false
                 songToAddPlaylist = null
-                com.codetrio.spatialflow.ui.SnackbarController.showMessage("Added to playlist: ${playlist.title}")
+                com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.added_to_playlist, playlist.title))
             },
             onDismiss = {
                 showAddToPlaylistDialog = false
@@ -1296,7 +1298,7 @@ fun SongCreditsScreen(song: OnlineSong, onBack: () -> Unit) {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -1331,9 +1333,9 @@ fun SongCreditsScreen(song: OnlineSong, onBack: () -> Unit) {
                             )
                         }
                         Text(
-                            text = "Song • ${
+                            text = stringResource(R.string.song_year,
                                 java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
-                            }",
+                            ),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1393,20 +1395,20 @@ fun SongCreditsScreen(song: OnlineSong, onBack: () -> Unit) {
                                 color = MaterialTheme.colorScheme.onBackground
                             )
 
-                            CreditsTextSection(title = "Performed by", content = contributors)
+                            CreditsTextSection(title = stringResource(R.string.performed_by), content = contributors)
 
                             CreditsTextSection(
-                                title = "Written by",
+                                title = stringResource(R.string.written_by),
                                 content = listOf(contributors.firstOrNull() ?: song.artist)
                             )
 
                             CreditsTextSection(
-                                title = "Produced by",
+                                title = stringResource(R.string.produced_by),
                                 content = listOf(if (contributors.size > 1) contributors.last() else "SpatialFlow Engine")
                             )
 
                             CreditsTextSection(
-                                title = "Music metadata provided by",
+                                title = stringResource(R.string.music_metadata_provided_by),
                                 content = listOf(
                                     contributors.firstOrNull() ?: "Online Stream Analytics"
                                 )
@@ -1463,20 +1465,20 @@ fun SongCreditsScreen(song: OnlineSong, onBack: () -> Unit) {
                             verticalArrangement = Arrangement.spacedBy(28.dp),
                             horizontalAlignment = Alignment.Start
                         ) {
-                            CreditsTextSection(title = "Performed by", content = contributors)
+                            CreditsTextSection(title = stringResource(R.string.performed_by), content = contributors)
 
                             CreditsTextSection(
-                                title = "Written by",
+                                title = stringResource(R.string.written_by),
                                 content = listOf(contributors.firstOrNull() ?: song.artist)
                             )
 
                             CreditsTextSection(
-                                title = "Produced by",
+                                title = stringResource(R.string.produced_by),
                                 content = listOf(if (contributors.size > 1) contributors.last() else "SpatialFlow Engine")
                             )
 
                             CreditsTextSection(
-                                title = "Music metadata provided by",
+                                title = stringResource(R.string.music_metadata_provided_by),
                                 content = listOf(
                                     contributors.firstOrNull() ?: "Online Stream Analytics"
                                 )
@@ -1541,6 +1543,7 @@ fun SearchHeader(
         onClearSearch: () -> Unit
     ) {
         // Use WindowInsets instead of hardcoded statusBarsPadding so it adapts to any device
+        val context = LocalContext.current
         val voiceLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
             contract = androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
         ) { result ->
@@ -1609,7 +1612,7 @@ fun SearchHeader(
                             modifier = Modifier.focusRequester(focusRequester),
                             placeholder = {
                                 Text(
-                                    "Search Music",
+                                    stringResource(R.string.search_music),
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     style = MaterialTheme.typography.bodyLarge
                                 )
@@ -1619,21 +1622,21 @@ fun SearchHeader(
                                     isSearchActive -> IconButton(onClick = {
                                         onSearchActiveChange(false); onClearSearch()
                                     }) {
-                                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back",
+                                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back),
                                             tint = MaterialTheme.colorScheme.onSurfaceVariant)
                                     }
                                     searchQuery.isNotBlank() -> IconButton(onClick = { onClearSearch() }) {
-                                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back",
+                                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back),
                                             tint = MaterialTheme.colorScheme.onSurfaceVariant)
                                     }
-                                    else -> Icon(Icons.Default.Search, "Search",
+                                    else -> Icon(Icons.Default.Search, stringResource(R.string.search),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                             },
                             trailingIcon = {
                                 when {
                                     searchQuery.isNotBlank() -> IconButton(onClick = { onQueryChange("") }) {
-                                        Icon(Icons.Default.Close, "Clear",
+                                        Icon(Icons.Default.Close, stringResource(R.string.clear),
                                             tint = MaterialTheme.colorScheme.onSurfaceVariant)
                                     }
                                     !isSearchActive -> {
@@ -1646,14 +1649,14 @@ fun SearchHeader(
                                                         .data(userProfile.avatarUrl?.resize(80))
                                                         .crossfade(true)
                                                         .build(),
-                                                    contentDescription = "Account",
+                                                    contentDescription = stringResource(R.string.account),
                                                     modifier = Modifier.size(avatarSize).clip(CircleShape),
                                                     contentScale = ContentScale.Crop
                                                 )
                                             } else {
                                                 Icon(
                                                     imageVector = Icons.Default.AccountCircle,
-                                                    contentDescription = "Account",
+                                                    contentDescription = stringResource(R.string.account),
                                                     modifier = Modifier.size(avatarSize),
                                                     tint = MaterialTheme.colorScheme.primary
                                                 )
@@ -1665,18 +1668,18 @@ fun SearchHeader(
                                             onClick = {
                                                 val intent = android.content.Intent(android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                                                     putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE_MODEL, android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                                                    putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, "Speak to search...")
+                                                    putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, context.getString(R.string.speak_to_search_))
                                                 }
                                                 try {
                                                     voiceLauncher.launch(intent)
                                                 } catch (e: Exception) {
-                                                    com.codetrio.spatialflow.ui.SnackbarController.showMessage("Voice search is not supported on this device")
+                                                    com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.voice_search_is_not_supported_on_this_device))
                                                 }
                                             }
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Default.Mic,
-                                                contentDescription = "Voice Search",
+                                                contentDescription = stringResource(R.string.voice_search),
                                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
                                         }
@@ -1720,12 +1723,12 @@ fun SearchHeader(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(
-                                            text = "Recent Searches",
+                                            text = stringResource(R.string.recent_searches),
                                             style = MaterialTheme.typography.titleSmall,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
-                                        TextButton(onClick = onClearSearchHistory) { Text("Clear all") }
+                                        TextButton(onClick = onClearSearchHistory) { Text(stringResource(R.string.clear_all)) }
                                     }
                                 }
                                 items(searchHistory, key = { "hist_$it" }) { historyItem ->
@@ -1734,7 +1737,7 @@ fun SearchHeader(
                                         leadingContent = { Icon(Icons.Default.History, null) },
                                         trailingContent = {
                                             IconButton(onClick = { onRemoveFromSearchHistory(historyItem) }) {
-                                                Icon(Icons.Default.Close, "Remove",
+                                                Icon(Icons.Default.Close, stringResource(R.string.remove),
                                                     modifier = Modifier.size(18.dp))
                                             }
                                         },
@@ -1748,7 +1751,7 @@ fun SearchHeader(
                                 item(key = "yt_history_header") {
                                     Spacer(modifier = Modifier.height(16.dp))
                                     Text(
-                                        text = "Recently Played (YouTube Music)",
+                                        text = stringResource(R.string.recently_played_youtube_music),
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1855,18 +1858,18 @@ fun SearchHeader(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val filters = listOf(
-                        null to "All",
-                        SearchFilter.SONGS to "Songs",
-                        SearchFilter.ALBUMS to "Albums",
-                        SearchFilter.ARTISTS to "Artists",
-                        SearchFilter.PLAYLISTS to "Playlists"
+                        null to R.string.filter_all,
+                        SearchFilter.SONGS to R.string.filter_songs,
+                        SearchFilter.ALBUMS to R.string.filter_albums,
+                        SearchFilter.ARTISTS to R.string.filter_artists,
+                        SearchFilter.PLAYLISTS to R.string.filter_playlists
                     )
                     items(filters, key = { (_, label) -> "filter_$label" }) { (filter, label) ->
                         val selected = currentFilter == filter
                         FilterChip(
                             selected = selected,
                             onClick = { onFilterClick(filter) },
-                            label = { Text(label, fontWeight = FontWeight.SemiBold) },
+                            label = { Text(stringResource(label), fontWeight = FontWeight.SemiBold) },
                             shape = RoundedCornerShape(8.dp),
                             border = null,
                             colors = FilterChipDefaults.filterChipColors(
@@ -1965,12 +1968,12 @@ fun GenresScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    contentDescription = stringResource(R.string.back)
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Moods & Genres",
+                text = stringResource(R.string.moods_and_genres),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface

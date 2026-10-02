@@ -78,6 +78,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -1114,7 +1115,7 @@ private fun InterludeItem(
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_music_note),
-            contentDescription = "Interlude",
+            contentDescription = stringResource(R.string.interlude),
             tint = accentColor.copy(alpha = 0.95f),
             modifier = Modifier
                 .size(24.dp)

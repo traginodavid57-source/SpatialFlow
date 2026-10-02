@@ -89,6 +89,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLocale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -97,6 +98,7 @@ import androidx.core.content.edit
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codetrio.spatialflow.MainActivity
+import com.codetrio.spatialflow.R
 import com.codetrio.spatialflow.ui.components.BalanceChannelMeter
 import com.codetrio.spatialflow.ui.components.LoudnessRingIndicator
 import com.codetrio.spatialflow.ui.components.ReverbRoomVisualizer
@@ -300,14 +302,14 @@ fun EffectsScreen(
         // Header
         Column(modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 8.dp)) {
             Text(
-                text = "Audio Effects",
+                text = stringResource(R.string.audio_effects),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Configure studio-grade soundstages, equalizers, and performance enhancers",
+                text = stringResource(R.string.configure_studio_grade_soundstages_equalizers_and_performance_enhancers),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -364,7 +366,7 @@ fun ProcessingCard(progress: Int) {
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {        Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Processing 8D Audio: $progress%", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onPrimaryContainer, fontWeight = FontWeight.Bold, modifier = Modifier.alpha(pulseAlpha))
+            Text(text = stringResource(R.string.processing_8d_audio_percent, progress), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onPrimaryContainer, fontWeight = FontWeight.Bold, modifier = Modifier.alpha(pulseAlpha))
             Spacer(modifier = Modifier.height(16.dp)) // More space for taller wave
             
             // Custom thick stroke for a bolder "Expressive" feel
@@ -461,14 +463,14 @@ fun Audio8DSection(
     SectionContainer {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                Text(text = "8D Audio", style = MaterialTheme.typography.titleLarge)
+                Text(text = stringResource(R.string.s_8d_audio), style = MaterialTheme.typography.titleLarge)
                 IconButton(
                     onClick = { showDialog = true },
                     modifier = Modifier.padding(start = 8.dp).size(28.dp)
                 ) {
                     Icon(
                         painter = androidx.compose.ui.res.painterResource(id = com.codetrio.spatialflow.R.drawable.ic_info),
-                        contentDescription = "Info",
+                        contentDescription = stringResource(R.string.info),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(20.dp)
                     )
@@ -490,7 +492,7 @@ fun Audio8DSection(
         
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Spatial 360° rotating audio effect for an immersive sound stage experience.",
+            text = stringResource(R.string.spatial_360_rotating_audio_effect_for_an_immersive_sound_stage_experience_),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -499,11 +501,11 @@ fun Audio8DSection(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("Information") },
-            text = { Text("8D only works on Local/Downloaded Songs") },
+            title = { Text(stringResource(R.string.information)) },
+            text = { Text(stringResource(R.string.s_8d_only_works_on_local_downloaded_songs)) },
             confirmButton = {
                 TextButton(onClick = { showDialog = false }) {
-                    Text("Got it")
+                    Text(stringResource(R.string.got_it))
                 }
             },
             icon = {
@@ -526,7 +528,7 @@ fun LoudnessSection(
 ) {
     SectionContainer {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Loudness Enhancer", style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+            Text(text = stringResource(R.string.loudness_enhancer), style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
             ExpressiveSwitch(checked = enabled, onCheckedChange = onToggle, enabled = interactionEnabled)
         }
         AnimatedVisibility(visible = enabled) {
@@ -541,7 +543,7 @@ fun LoudnessSection(
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Gain", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+                    Text(text = stringResource(R.string.gain), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
                     Text(
                         text = String.format(LocalLocale.current.platformLocale, "%s%d dB", if (value > 0) "+" else "", value.toInt()),
                         style = MaterialTheme.typography.labelLarge,
@@ -557,13 +559,14 @@ fun LoudnessSection(
 
 data class EqPreset(val name: String, val bands: List<Float>)
 
-val predefinedEqPresets = listOf(
-    EqPreset("Flat", listOf(0f, 0f, 0f, 0f, 0f)),
-    EqPreset("Bass Boost", listOf(6f, 4f, 0f, -2f, -4f)),
-    EqPreset("Treble Boost", listOf(-4f, -2f, 0f, 4f, 6f)),
-    EqPreset("Vocal", listOf(-2f, -1f, 4f, 3f, -1f)),
-    EqPreset("Acoustic", listOf(3f, 1f, 0f, 2f, 3f)),
-    EqPreset("Electronic", listOf(4f, 2f, -1f, 2f, 4f))
+@Composable
+fun predefinedEqPresets(): List<EqPreset> = listOf(
+    EqPreset(stringResource(R.string.flat), listOf(0f, 0f, 0f, 0f, 0f)),
+    EqPreset(stringResource(R.string.bass_boost), listOf(6f, 4f, 0f, -2f, -4f)),
+    EqPreset(stringResource(R.string.treble_boost), listOf(-4f, -2f, 0f, 4f, 6f)),
+    EqPreset(stringResource(R.string.vocal), listOf(-2f, -1f, 4f, 3f, -1f)),
+    EqPreset(stringResource(R.string.acoustic), listOf(3f, 1f, 0f, 2f, 3f)),
+    EqPreset(stringResource(R.string.electronic), listOf(4f, 2f, -1f, 2f, 4f))
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -590,7 +593,7 @@ fun EqualizerSection(enabled: Boolean, onToggle: (Boolean) -> Unit, bands: List<
             }
         }
     }
-    val allPresets = predefinedEqPresets + customPresets
+    val allPresets = predefinedEqPresets() + customPresets
 
     var showSaveDialog by remember { mutableStateOf(false) }
     var newPresetName by remember { mutableStateOf("") }
@@ -598,12 +601,12 @@ fun EqualizerSection(enabled: Boolean, onToggle: (Boolean) -> Unit, bands: List<
     if (showSaveDialog) {
         AlertDialog(
             onDismissRequest = { showSaveDialog = false },
-            title = { Text("Save Preset") },
+            title = { Text(stringResource(R.string.save_preset)) },
             text = {
                 OutlinedTextField(
                     value = newPresetName,
                     onValueChange = { newPresetName = it },
-                    label = { Text("Preset Name") },
+                    label = { Text(stringResource(R.string.preset_name)) },
                     singleLine = true
                 )
             },
@@ -622,17 +625,17 @@ fun EqualizerSection(enabled: Boolean, onToggle: (Boolean) -> Unit, bands: List<
                         showSaveDialog = false
                         newPresetName = ""
                     }
-                ) { Text("Save") }
+                ) { Text(stringResource(R.string.save)) }
             },
             dismissButton = {
-                TextButton(onClick = { showSaveDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showSaveDialog = false }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }
 
     SectionContainer {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Equalizer", style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+            Text(text = stringResource(R.string.equalizer), style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
             ExpressiveSwitch(checked = enabled, onCheckedChange = onToggle, enabled = interactionEnabled)
         }
         
@@ -694,7 +697,7 @@ fun EqualizerSection(enabled: Boolean, onToggle: (Boolean) -> Unit, bands: List<
                             Spacer(Modifier.width(8.dp))
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Delete Preset",
+                                contentDescription = stringResource(R.string.delete_preset),
                                 modifier = Modifier
                                     .size(16.dp)
                                     .clickable {
@@ -723,7 +726,7 @@ fun EqualizerSection(enabled: Boolean, onToggle: (Boolean) -> Unit, bands: List<
                             Spacer(Modifier.width(8.dp))
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Delete Preset",
+                                contentDescription = stringResource(R.string.delete_preset),
                                 modifier = Modifier
                                     .size(16.dp)
                                     .clickable {
@@ -745,7 +748,7 @@ fun EqualizerSection(enabled: Boolean, onToggle: (Boolean) -> Unit, bands: List<
                         enabled = enabled && interactionEnabled,
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
                     ) {
-                        Text("+ Save Custom", style = MaterialTheme.typography.labelLarge)
+                        Text(stringResource(R.string.save_custom), style = MaterialTheme.typography.labelLarge)
                     }
                 }
             }
@@ -775,7 +778,7 @@ fun EqualizerSection(enabled: Boolean, onToggle: (Boolean) -> Unit, bands: List<
 fun BalanceSection(enabled: Boolean, onToggle: (Boolean) -> Unit, value: Float, onChange: (Float) -> Unit, interactionEnabled: Boolean) {
     SectionContainer {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Stereo Balance", style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+            Text(text = stringResource(R.string.stereo_balance), style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
             ExpressiveSwitch(checked = enabled, onCheckedChange = onToggle, enabled = interactionEnabled)
         }
         AnimatedVisibility(visible = enabled) {
@@ -790,16 +793,16 @@ fun BalanceSection(enabled: Boolean, onToggle: (Boolean) -> Unit, value: Float, 
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Position", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-                    Text(text = when { value.toInt() == 0 -> "Center"; value.toInt() < 0 -> "L${abs(value.toInt())}"; else -> "R${value.toInt()}" }, style = MaterialTheme.typography.labelLarge, color = if (enabled && interactionEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline)
+                    Text(text = stringResource(R.string.position), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+                    Text(text = when { value.toInt() == 0 -> stringResource(R.string.center); value.toInt() < 0 -> "L${abs(value.toInt())}"; else -> "R${value.toInt()}" }, style = MaterialTheme.typography.labelLarge, color = if (enabled && interactionEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline)
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 ResponsiveSlider(value = value, onValueChange = onChange, valueRange = -50f..50f, enabled = enabled && interactionEnabled)
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Left", style = MaterialTheme.typography.labelSmall)
+                    Text(text = stringResource(R.string.left), style = MaterialTheme.typography.labelSmall)
                     Text(
-                        text = "Center",
+                        text = stringResource(R.string.center),
                         style = MaterialTheme.typography.labelSmall,
                         color = if (enabled && interactionEnabled && value.toInt() != 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                         modifier = Modifier
@@ -808,7 +811,7 @@ fun BalanceSection(enabled: Boolean, onToggle: (Boolean) -> Unit, value: Float, 
                             }
                             .padding(horizontal = 8.dp, vertical = 2.dp)
                     )
-                    Text(text = "Right", style = MaterialTheme.typography.labelSmall)
+                    Text(text = stringResource(R.string.right), style = MaterialTheme.typography.labelSmall)
                 }
             }
         }
@@ -820,13 +823,13 @@ fun BalanceSection(enabled: Boolean, onToggle: (Boolean) -> Unit, value: Float, 
 fun SpeedSection(enabled: Boolean, onToggle: (Boolean) -> Unit, value: Float, onChange: (Float) -> Unit, interactionEnabled: Boolean, isPitchMatched: Boolean, onPitchMatchToggle: () -> Unit) {
     SectionContainer {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Playback Speed", style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+            Text(text = stringResource(R.string.playback_speed), style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
             ExpressiveSwitch(checked = enabled, onCheckedChange = onToggle, enabled = interactionEnabled)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Box(modifier = Modifier.animateContentSize()) {
             Text(
-                text = if (isPitchMatched) "Speed adjusted while keeping original pitch." else "Pitch changes relative to playback speed\n(Vinyl mode).",
+                text = if (isPitchMatched) stringResource(R.string.speed_adjusted_while_keeping_original_pitch_) else stringResource(R.string.pitch_changes_relative_to_playback_speed_vinyl_mode_2),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth()
@@ -853,7 +856,7 @@ fun SpeedSection(enabled: Boolean, onToggle: (Boolean) -> Unit, value: Float, on
                 modifier = Modifier.height(32.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Match Pitch", style = MaterialTheme.typography.labelMedium)
+                    Text(text = stringResource(R.string.match_pitch), style = MaterialTheme.typography.labelMedium)
                     if (isPitchMatched) {
                         Spacer(modifier = Modifier.width(0.dp))
                     }
@@ -862,14 +865,14 @@ fun SpeedSection(enabled: Boolean, onToggle: (Boolean) -> Unit, value: Float, on
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Speed", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+            Text(text = stringResource(R.string.speed), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
             Text(text = String.format(LocalLocale.current.platformLocale, "%.2fx", value), style = MaterialTheme.typography.labelLarge, color = if (enabled && interactionEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline)
         }
         Spacer(modifier = Modifier.height(12.dp))
         ResponsiveSlider(value = value, onValueChange = onChange, valueRange = 0.5f..2.0f, enabled = enabled && interactionEnabled)
         Spacer(modifier = Modifier.height(12.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-             Text(text = "0.5x", style = MaterialTheme.typography.labelSmall); Text(text = "Normal", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline); Text(text = "2.0x", style = MaterialTheme.typography.labelSmall)
+             Text(text = "0.5x", style = MaterialTheme.typography.labelSmall); Text(text = stringResource(R.string.normal), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline); Text(text = "2.0x", style = MaterialTheme.typography.labelSmall)
         }
     }
 }
@@ -892,19 +895,19 @@ fun ReverbSection(
 ) {
     SectionContainer {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Reverb", style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+            Text(text = stringResource(R.string.reverb), style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
             ExpressiveSwitch(checked = enabled, onCheckedChange = onToggle, enabled = interactionEnabled)
         }
         AnimatedVisibility(visible = enabled) {
             Column {
                 Spacer(modifier = Modifier.height(12.dp))
                 val presets = listOf(
-                    "None",
-                    "Small Room",
-                    "Concert Hall",
-                    "Stadium",
-                    "Plate",
-                    "Spring"
+                    stringResource(R.string.none),
+                    stringResource(R.string.small_room),
+                    stringResource(R.string.concert_hall),
+                    stringResource(R.string.stadium),
+                    stringResource(R.string.plate),
+                    stringResource(R.string.spring)
                 )
                 val index = presetValue.toInt().coerceIn(0, 5)
 
@@ -926,7 +929,7 @@ fun ReverbSection(
                         value = presets[index],
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Preset") },
+                        label = { Text(stringResource(R.string.preset)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                         modifier = Modifier.menuAnchor().fillMaxWidth(),
@@ -951,7 +954,7 @@ fun ReverbSection(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Intensity", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+                    Text(text = stringResource(R.string.intensity), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
                     Text(
                         text = String.format(LocalLocale.current.platformLocale, "%d%%", (intensityValue * 100).toInt()),
                         style = MaterialTheme.typography.labelLarge,
@@ -969,9 +972,9 @@ fun ReverbSection(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(text = "Subtle", style = MaterialTheme.typography.labelSmall)
-                    Text(text = "Balanced", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline)
-                    Text(text = "Lush", style = MaterialTheme.typography.labelSmall)
+                    Text(text = stringResource(R.string.subtle), style = MaterialTheme.typography.labelSmall)
+                    Text(text = stringResource(R.string.balanced), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline)
+                    Text(text = stringResource(R.string.lush), style = MaterialTheme.typography.labelSmall)
                 }
             }
         }

@@ -85,7 +85,7 @@ object SongDownloader {
     fun downloadSong(context: Context, song: SongItem) {
         val videoId = song.videoId
         if (videoId.isNullOrEmpty()) {
-            com.codetrio.spatialflow.ui.SnackbarController.showMessage("Local songs are already offline")
+            com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.local_songs_are_already_offline))
             return
         }
 
@@ -93,7 +93,7 @@ object SongDownloader {
         val cleanTitleStr = cleanTitle(song.title)
         val cleanArtistStr = cleanArtist(song.artist)
 
-        com.codetrio.spatialflow.ui.SnackbarController.showMessage("Extracting and starting download: $cleanTitleStr")
+        com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.extracting_and_starting_download_, cleanTitleStr))
 
         scope.launch {
             _downloadProgress.value += (videoId to 0)
@@ -107,7 +107,7 @@ object SongDownloader {
                 if (streamUrl == null) {
                     cancelNotification(context, notificationId)
                     withContext(Dispatchers.Main) {
-                        com.codetrio.spatialflow.ui.SnackbarController.showMessage("Failed to extract download URL for $cleanTitleStr")
+                        com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.failed_to_extract_download_url_for, cleanTitleStr))
                     }
                     return@launch
                 }
@@ -127,7 +127,7 @@ object SongDownloader {
                 if (connection.responseCode != HttpURLConnection.HTTP_OK) {
                     cancelNotification(context, notificationId)
                     withContext(Dispatchers.Main) {
-                        com.codetrio.spatialflow.ui.SnackbarController.showMessage("Download server error: HTTP ${connection.responseCode}")
+                        com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.download_server_error_http, connection.responseCode))
                     }
                     return@launch
                 }
@@ -258,7 +258,7 @@ object SongDownloader {
                 _downloadProgress.value -= videoId
                 withContext(Dispatchers.Main) {
                     com.codetrio.spatialflow.ui.SnackbarController.showMessage(
-                        "Downloaded: $cleanTitleStr",
+                        context.getString(R.string.downloaded_, cleanTitleStr),
                         iconResId = R.drawable.ic_downloaded
                     )
                 }
@@ -268,7 +268,7 @@ object SongDownloader {
                 Log.e(TAG, "Download failed for ${song.title}", e)
                 cancelNotification(context, notificationId)
                 withContext(Dispatchers.Main) {
-                    com.codetrio.spatialflow.ui.SnackbarController.showMessage("Download failed: ${e.message}")
+                    com.codetrio.spatialflow.ui.SnackbarController.showMessage(context.getString(R.string.download_failed_, e.message))
                 }
             }
         }
@@ -278,10 +278,10 @@ object SongDownloader {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Downloads",
+                context.getString(R.string.downloads),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Shows progress of active song downloads"
+                description = context.getString(R.string.shows_progress_of_active_song_downloads)
             }
             val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
@@ -292,8 +292,8 @@ object SongDownloader {
         createNotificationChannel(context)
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(com.codetrio.spatialflow.R.drawable.ic_music_note)
-            .setContentTitle("Downloading Track")
-            .setContentText("$title ($progress%)")
+            .setContentTitle(context.getString(R.string.downloading_track))
+            .setContentText(context.getString(R.string.download_progress_text, title, progress))
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
@@ -307,8 +307,8 @@ object SongDownloader {
         createNotificationChannel(context)
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(com.codetrio.spatialflow.R.drawable.ic_music_note)
-            .setContentTitle("Download Complete")
-            .setContentText("$title — $artist")
+            .setContentTitle(context.getString(R.string.download_complete))
+            .setContentText(context.getString(R.string.download_complete_subtitle, title, artist))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
 

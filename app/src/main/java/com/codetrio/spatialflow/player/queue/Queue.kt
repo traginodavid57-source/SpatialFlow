@@ -75,6 +75,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -526,7 +527,7 @@ fun SlidingQueueDrawer(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Playback Queue",
+                        text = stringResource(R.string.playback_queue),
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.ExtraBold,
                             letterSpacing = (-0.5).sp
@@ -543,7 +544,7 @@ fun SlidingQueueDrawer(
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_keyboard_arrow_down),
-                            contentDescription = "Collapse Queue",
+                            contentDescription = stringResource(R.string.collapse_queue),
                             tint = if (isDark) Color.White else Color.Black,
                             modifier = Modifier.size(24.dp)
                         )
@@ -559,7 +560,7 @@ fun SlidingQueueDrawer(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "${songList.size} tracks • Playing next",
+                        text = stringResource(R.string.tracks_playing_next, songList.size),
                         style = MaterialTheme.typography.bodyMedium,
                         color = (if (isDark) Color.White else Color.Black).copy(alpha = 0.5f),
                         fontWeight = FontWeight.Medium,
@@ -576,7 +577,7 @@ fun SlidingQueueDrawer(
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Text(
-                                text = "Autoplay",
+                                text = stringResource(R.string.autoplay),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = (if (isDark) Color.White else Color.Black).copy(alpha = 0.6f)
                             )
@@ -611,7 +612,7 @@ fun SlidingQueueDrawer(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Search,
-                                contentDescription = "Toggle Search",
+                                contentDescription = stringResource(R.string.toggle_search),
                                 tint = if (isSearchExpanded) dynamicAccentColor else (if (isDark) Color.White else Color.Black).copy(alpha = 0.7f),
                                 modifier = Modifier.size(20.dp)
                             )
@@ -633,7 +634,7 @@ fun SlidingQueueDrawer(
                             .padding(horizontal = 24.dp, vertical = 8.dp),
                         placeholder = {
                             Text(
-                                text = "Search tracks in queue...",
+                                text = stringResource(R.string.search_tracks_in_queue_),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = (if (isDark) Color.White else Color.Black).copy(alpha = 0.5f)
                             )
@@ -650,7 +651,7 @@ fun SlidingQueueDrawer(
                                 IconButton(onClick = { searchQuery = "" }) {
                                     Icon(
                                         imageVector = Icons.Rounded.Clear,
-                                        contentDescription = "Clear search",
+                                        contentDescription = stringResource(R.string.clear_search),
                                         tint = (if (isDark) Color.White else Color.Black).copy(alpha = 0.6f)
                                     )
                                 }
@@ -763,7 +764,7 @@ fun SlidingQueueDrawer(
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Rounded.Menu,
-                                                contentDescription = "Drag to reorder",
+                                                contentDescription = stringResource(R.string.drag_to_reorder),
                                                 tint = (if (isDark) Color.White else Color.Black).copy(alpha = 0.35f),
                                                 modifier = Modifier.size(24.dp)
                                             )
@@ -838,7 +839,7 @@ fun SlidingQueueDrawer(
                                 ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.ic_shuffle),
-                                        contentDescription = "Shuffle",
+                                        contentDescription = stringResource(R.string.shuffle),
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
@@ -881,7 +882,7 @@ fun SlidingQueueDrawer(
                                 ) {
                                     Icon(
                                         painter = painterResource(id = loopIcon),
-                                        contentDescription = "Repeat Mode",
+                                        contentDescription = stringResource(R.string.repeat_mode),
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
@@ -923,7 +924,7 @@ fun SlidingQueueDrawer(
                                 ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.ic_timer),
-                                        contentDescription = "Sleep Timer",
+                                        contentDescription = stringResource(R.string.setting_sleep_timer),
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
@@ -1103,7 +1104,7 @@ private fun RebuiltQueueListItem(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Clear,
-                            contentDescription = "Remove from Queue",
+                            contentDescription = stringResource(R.string.remove_from_queue),
                             tint = (if (isDark) Color.White else Color.Black).copy(alpha = 0.45f),
                             modifier = Modifier.size(20.dp)
                         )
