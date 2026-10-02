@@ -415,7 +415,13 @@ class AudioPlaybackService : MediaSessionService() {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        return if (intent?.action == SERVICE_INTERFACE) super.onBind(intent) else binder
+        return when (intent?.action) {
+            SERVICE_INTERFACE -> super.onBind(intent)
+            // Legacy android.media.browse.MediaBrowserService clients (Android Auto,
+            // Bluetooth browsing, third-party players/widgets) bind with this action.
+            "android.media.browse.MediaBrowserService" -> super.onBind(intent)
+            else -> binder
+        }
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -1628,6 +1634,54 @@ class AudioPlaybackService : MediaSessionService() {
             }
             return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
+
+        override fun onPlaybackResumption(
+            mediaSession: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            isForPlayback: Boolean
+        ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> {
+            return try {
+                Futures.immediateFuture(buildResumptionState(isForPlayback))
+            } catch (e: Exception) {
+                Log.e(TAG, "Playback resumption unavailable: ${e.message}")
+                Futures.immediateFailedFuture(e)
+            }
+        }
+    }
+
+    /**
+     * Rebuilds the saved queue so the system can resume playback after a reboot or after the
+     * process was killed (media button / System UI resumption notification).
+     */
+    private fun buildResumptionState(isForPlayback: Boolean): MediaSession.MediaItemsWithStartPosition {
+        val state = com.codetrio.spatialflow.util.PlaybackStateManager
+        val queue = state.getLastQueue(applicationContext)
+        val songs = if (queue.isNotEmpty()) queue else listOfNotNull(state.getLastSong(applicationContext))
+        check(songs.isNotEmpty()) { "No persisted playback state to resume" }
+
+        val startIndex = state.getLastIndex(applicationContext).coerceIn(0, songs.lastIndex)
+        val position = state.getLastPosition(applicationContext).coerceAtLeast(0L)
+        val source = if (isForPlayback) songs else listOf(songs[startIndex])
+
+        val items = source.map { song ->
+            val uri = if (!song.videoId.isNullOrEmpty()) {
+                "innertube://${song.videoId}".toUri()
+            } else {
+                song.contentUri
+            }
+            MediaItem.Builder()
+                .setUri(uri)
+                .setMediaId(song.id.toString())
+                .setMediaMetadata(
+                    androidx.media3.common.MediaMetadata.Builder()
+                        .setTitle(song.title)
+                        .setArtist(song.artist)
+                        .build()
+                )
+                .build()
+        }
+
+        return MediaSession.MediaItemsWithStartPosition(items, if (isForPlayback) startIndex else 0, position)
     }
 
     private fun getActionIntent(action: String, requestCode: Int): android.app.PendingIntent {

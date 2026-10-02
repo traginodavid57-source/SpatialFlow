@@ -10,6 +10,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.app.PictureInPictureParams
+import android.util.Rational
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -34,6 +36,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -42,7 +46,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons.Default
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -203,6 +213,8 @@ class MainActivity : AppCompatActivity() {
                 else -> systemDark
             }
 
+            val isInPiPMode by pipModeState
+
             var crashLog by remember { mutableStateOf<String?>(null) }
             LaunchedEffect(Unit) {
                 if (CrashHandler.hasCrashReport(this@MainActivity)) {
@@ -239,6 +251,13 @@ class MainActivity : AppCompatActivity() {
                 dynamicAlbumColor = dynamicAlbumColor,
                 windowSizeClass = windowSizeClass
             ) {
+                if (isInPiPMode) {
+                    PiPMiniPlayer(
+                        activity = this@MainActivity,
+                        viewModel = playerViewModel,
+                        onDismissPiP = { }
+                    )
+                } else {
                 if (showTelegramDialog) {
                     TelegramJoinDialog(
                         onDismiss = {
@@ -684,6 +703,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        }
 
         updateManager = UpdateManager(this)
         if (!handleIntent(intent)) {
@@ -857,6 +877,185 @@ class MainActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) setupSystemBars()
+    }
+
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        Log.d(TAG, "Picture-in-Picture mode changed: $isInPictureInPictureMode")
+        pipModeState.value = isInPictureInPictureMode
+    }
+
+    private val pipModeState = mutableStateOf(false)
+
+    @Composable
+    private fun PiPMiniPlayer(
+        activity: MainActivity,
+        viewModel: com.codetrio.spatialflow.viewmodel.PlayerSharedViewModel,
+        onDismissPiP: () -> Unit
+    ) {
+        val context = LocalContext.current
+        val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+        val currentSong = viewModel.currentSong.collectAsStateWithLifecycle()
+        val playerBackgroundColor = viewModel.playerBackgroundColor.collectAsStateWithLifecycle()
+        val isPlaying = uiState.value.isPlaying
+        val position = viewModel.currentPosition.collectAsStateWithLifecycle()
+        val duration = viewModel.duration.collectAsStateWithLifecycle()
+        val song = currentSong.value
+        val theme = MaterialTheme.colorScheme
+        val artworkColor = playerBackgroundColor.value ?: theme.surfaceContainerHighest
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(theme.surfaceContainer),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .background(
+                        color = theme.surfaceContainer,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                // Artwork
+                song?.let { s ->
+                    Box(
+                        modifier = Modifier
+                            .size(120.dp)
+                            .background(artworkColor, RoundedCornerShape(8.dp))
+                            .clip(RoundedCornerShape(8.dp))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MusicNote,
+                            contentDescription = s.title,
+                            tint = theme.onSurfaceVariant,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .wrapContentSize(Alignment.Center)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Title & Artist
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    song?.let { s ->
+                        Text(
+                            text = s.title,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = theme.onSurface,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Text(
+                            text = s.artist,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = theme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Progress bar
+                val progress = if ((duration.value.toFloat() > 0)) {
+                    position.value.toFloat() / duration.value.toFloat()
+                } else 0f
+                androidx.compose.material3.LinearProgressIndicator(
+                    progress = progress.coerceIn(0f, 1f),
+                    modifier = Modifier.fillMaxWidth(),
+                    color = theme.primary,
+                    trackColor = theme.surfaceVariant
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Time labels
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = formatDuration(position.value.toLong()),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = theme.onSurfaceVariant
+                    )
+                    Text(
+                        text = formatDuration(duration.value.toLong()),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = theme.onSurfaceVariant
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Controls
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = { viewModel.playPreviousSong() },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.Default.SkipPrevious,
+                            contentDescription = stringResource(R.string.previous),
+                            tint = theme.onSurface,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            if (isPlaying) viewModel.pauseAudio() else viewModel.playAudio()
+                        },
+                        modifier = Modifier.size(56.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isPlaying)
+                                androidx.compose.material.icons.Icons.Default.Pause
+                            else
+                                androidx.compose.material.icons.Icons.Default.PlayArrow,
+                            contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
+                            tint = theme.primary,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                    IconButton(
+                        onClick = { viewModel.playNextSong(force = true) },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.Default.SkipNext,
+                            contentDescription = stringResource(R.string.next),
+                            tint = theme.onSurface,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun formatDuration(ms: Long): String {
+        val totalSeconds = ms / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return String.format("%d:%02d", minutes, seconds)
     }
 
     fun setupSystemBars() {

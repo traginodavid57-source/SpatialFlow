@@ -157,6 +157,8 @@
     <string name="external_source">External Source</string>
     <string name="external_track">External Track</string>
     <string name="extract_theme_colors_from_the_currently_playing_album_art">Extract theme colors from the currently playing album art</string>
+    <string name="album_art_background_blur">Album art background blur</string>
+    <string name="blur_album_art_as_background_in_expanded_player">Blur album art as background in expanded player</string>
     <string name="extracting_and_starting_download_">Extracting and starting download: %1$s</string>
     <string name="failed_to_check_for_updates">Failed to check for updates</string>
     <string name="failed_to_export_">Failed to export: %1$s</string>

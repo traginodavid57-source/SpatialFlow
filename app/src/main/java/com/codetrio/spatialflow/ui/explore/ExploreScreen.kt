@@ -449,7 +449,19 @@ fun ExploreScreen(
         { query: String -> viewModel.setSearchQuery(query) }
     }
     val onSearchHeaderSearch = remember(viewModel) {
-        { query: String -> viewModel.search(query); isSearchActive = false }
+        { query: String ->
+            val trimmed = query.trim()
+            if (isUrl(trimmed) && viewModel.handleUrlIfPossible(trimmed)) {
+                isSearchActive = false
+            } else {
+                viewModel.search(trimmed)
+                isSearchActive = false
+            }
+        }
+    }
+
+    private fun isUrl(text: String): Boolean {
+        return text.startsWith("http://") || text.startsWith("https://")
     }
     val onSearchHeaderActiveChange = remember {
         { active: Boolean -> isSearchActive = active }

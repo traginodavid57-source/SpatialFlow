@@ -63,6 +63,11 @@ fun AppleMusicBackground(
         mutableStateOf(prefs.getBoolean("show_animated_art", true))
     }
 
+    val albumArtBgBlur = remember {
+        val prefs = context.getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        mutableStateOf(prefs.getBoolean("album_art_background_blur", true))
+    }
+
     val playerTheme = remember {
         val prefs = context.getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
         mutableStateOf(prefs.getString("player_theme", "fluid") ?: "fluid")
@@ -76,6 +81,7 @@ fun AppleMusicBackground(
                 "now_playing_background_v2" -> bgMode.value = p.getString(key, "Blurred") ?: "Blurred"
                 "now_playing_background_effect" -> kenBurnsEnabled.value = p.getBoolean(key, false)
                 "show_animated_art" -> showAnimatedArt.value = p.getBoolean(key, true)
+                "album_art_background_blur" -> albumArtBgBlur.value = p.getBoolean(key, true)
                 "player_theme" -> playerTheme.value = p.getString(key, "fluid") ?: "fluid"
             }
         }
@@ -149,14 +155,16 @@ fun AppleMusicBackground(
             }
         } else {
             // FLUID THEME — BLURRED ARTWORK CANVAS + Dynamic KenBurns & Mesh Saturation
-            SpatialWrapper {
-                SpatialFloatingLight(
-                    modifier = Modifier.fillMaxSize(),
-                    album = { artworkUrl },
-                    isPlaying = { isPlaying },
-                    isLyricsPage = { isLyricsModeEnabled },
-                    backgroundEffectEnabled = kenBurnsEnabled.value
-                )
+            if (albumArtBgBlur.value) {
+                SpatialWrapper {
+                    SpatialFloatingLight(
+                        modifier = Modifier.fillMaxSize(),
+                        album = { artworkUrl },
+                        isPlaying = { isPlaying },
+                        isLyricsPage = { isLyricsModeEnabled },
+                        backgroundEffectEnabled = kenBurnsEnabled.value
+                    )
+                }
             }
 
             // Dynamic Palette Gradient Overlay

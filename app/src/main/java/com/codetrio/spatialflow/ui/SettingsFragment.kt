@@ -378,6 +378,15 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         prefs.edit {putBoolean(KEY_DYNAMIC_ALBUM_THEME, enabled)}
     }
 
+    // ── Album Art Background Blur ─────────────────────────────────────────
+    private val _albumArtBackgroundBlur = MutableStateFlow(prefs.getBoolean(KEY_ALBUM_ART_BACKGROUND_BLUR, true))
+    val albumArtBackgroundBlur: StateFlow<Boolean> = _albumArtBackgroundBlur.asStateFlow()
+
+    fun setAlbumArtBackgroundBlur(enabled: Boolean) {
+        _albumArtBackgroundBlur.value = enabled
+        prefs.edit {putBoolean(KEY_ALBUM_ART_BACKGROUND_BLUR, enabled)}
+    }
+
     // ── Player Theme ──────────────────────────────────────────────────
     private val _playerTheme = MutableStateFlow(prefs.getString(KEY_PLAYER_THEME, "fluid") ?: "fluid")
     val playerTheme: StateFlow<String> = _playerTheme.asStateFlow()
@@ -910,8 +919,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         const val KEY_HAPTIC_PLAY_PAUSE = "haptic_play_pause"
         const val KEY_HAPTIC_QUEUE = "haptic_queue"
         const val KEY_HAPTIC_FAVORITE = "haptic_favorite"
-        const val KEY_DYNAMIC_ALBUM_THEME = "dynamic_album_theme"
-        const val KEY_VOLUME_NORMALIZATION_ENABLED = "volume_normalization_enabled"
+const val KEY_DYNAMIC_ALBUM_THEME = "dynamic_album_theme"
+    const val KEY_ALBUM_ART_BACKGROUND_BLUR = "album_art_background_blur"
+    const val KEY_VOLUME_NORMALIZATION_ENABLED = "volume_normalization_enabled"
         const val KEY_TARGET_LUFS = "target_lufs"
         const val KEY_PLAYER_THEME = "player_theme"
     }
@@ -1172,6 +1182,7 @@ fun NavGraphBuilder.settingsGraph(navController: androidx.navigation.NavControll
         val amoledBlack by viewModel.amoledBlack.collectAsStateWithLifecycle()
         val showAnimatedArt by viewModel.showAnimatedArt.collectAsStateWithLifecycle()
         val dynamicAlbumTheme by viewModel.dynamicAlbumTheme.collectAsStateWithLifecycle()
+        val albumArtBackgroundBlur by viewModel.albumArtBackgroundBlur.collectAsStateWithLifecycle()
         val hideNavLabels by viewModel.hideNavLabels.collectAsStateWithLifecycle()
         val dynamicNavStyle by viewModel.dynamicNavStyle.collectAsStateWithLifecycle()
         val navigationBlur by viewModel.navigationBlur.collectAsStateWithLifecycle()
@@ -1189,6 +1200,8 @@ fun NavGraphBuilder.settingsGraph(navController: androidx.navigation.NavControll
             onShowAnimatedArtChange = { viewModel.setShowAnimatedArt(it) },
             dynamicAlbumTheme = dynamicAlbumTheme,
             onDynamicAlbumThemeChange = { viewModel.setDynamicAlbumTheme(it) },
+            albumArtBackgroundBlur = albumArtBackgroundBlur,
+            onAlbumArtBackgroundBlurChange = { viewModel.setAlbumArtBackgroundBlur(it) },
             hideNavLabels = hideNavLabels,
             onHideNavLabelsChange = { viewModel.setHideNavLabels(it) },
             dynamicNavStyle = dynamicNavStyle,
@@ -2071,6 +2084,8 @@ private fun AppearanceScreen(
     onShowAnimatedArtChange: (Boolean) -> Unit,
     dynamicAlbumTheme: Boolean,
     onDynamicAlbumThemeChange: (Boolean) -> Unit,
+    albumArtBackgroundBlur: Boolean,
+    onAlbumArtBackgroundBlurChange: (Boolean) -> Unit,
     hideNavLabels: Boolean,
     onHideNavLabelsChange: (Boolean) -> Unit,
     dynamicNavStyle: Boolean,
@@ -2168,6 +2183,7 @@ private fun AppearanceScreen(
                     }
                 }
                 add { DynamicAlbumThemeRow(dynamicAlbumTheme, onDynamicAlbumThemeChange) }
+                add { AlbumArtBackgroundBlurRow(albumArtBackgroundBlur, onAlbumArtBackgroundBlurChange) }
                 add { NavigationBlurRow(navigationBlur, onNavigationBlurChange) }
                 // Only show tab-blur toggle when blur is enabled globally
                 if (navigationBlur) {
@@ -2328,6 +2344,41 @@ private fun DynamicAlbumThemeRow(checked: Boolean, onToggle: (Boolean) -> Unit) 
         leadingContent = {
             Icon(
                 imageVector = Icons.Rounded.Palette,
+                contentDescription = null,
+                tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(24.dp)
+            )
+        },
+        trailingContent = {
+            Switch(
+                checked = checked,
+                onCheckedChange = onToggle
+            )
+        },
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+    )
+}
+
+@Composable
+private fun AlbumArtBackgroundBlurRow(checked: Boolean, onToggle: (Boolean) -> Unit) {
+    ListItem(
+        onClick = { onToggle(!checked) },
+        content = {
+            Column {
+                Text(
+                    text = stringResource(R.string.album_art_background_blur),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = stringResource(R.string.blur_album_art_as_background_in_expanded_player),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        },
+        leadingContent = {
+            Icon(
+                imageVector = Icons.Rounded.BlurOn,
                 contentDescription = null,
                 tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(24.dp)

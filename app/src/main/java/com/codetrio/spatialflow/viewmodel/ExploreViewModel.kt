@@ -325,6 +325,42 @@ class ExploreViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    fun handleUrlIfPossible(urlString: String): Boolean {
+        val uri = try { android.net.Uri.parse(urlString) } catch (_: Exception) { return false }
+        val host = uri.host ?: return false
+
+        // YouTube / YouTube Music links
+        if (host.contains("youtu.be") || host.contains("youtube.com") || host.contains("music.youtube.com")) {
+            handleDeepLink(urlString)
+            return true
+        }
+
+        // Spotify links - extract track/album/playlist and search on YouTube Music
+        if (host.contains("open.spotify.com")) {
+            val pathSegments = uri.pathSegments
+            if (pathSegments.size >= 2) {
+                val type = pathSegments[0]
+                val id = pathSegments[1]
+                val searchQuery = when (type) {
+                    "track" -> {
+                        // For tracks, we'd ideally fetch metadata, but for now search by ID
+                        "spotify:track:$id"
+                    }
+                    "album" -> "spotify:album:$id"
+                    "playlist" -> "spotify:playlist:$id"
+                    "artist" -> "spotify:artist:$id"
+                    else -> null
+                }
+                searchQuery?.let {
+                    search(it)
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+
     // ========== Search Methods ==========
 
     fun setSearchQuery(query: String) {
