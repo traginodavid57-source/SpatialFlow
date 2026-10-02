@@ -38,6 +38,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clip
+import androidx.compose.foundation.drawWithContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,13 +53,14 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons.Default
-
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Default
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -75,7 +77,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.drawRect
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -912,7 +916,7 @@ class MainActivity : AppCompatActivity() {
         val duration = viewModel.duration.collectAsStateWithLifecycle()
         val song = currentSong.value
         val theme = MaterialTheme.colorScheme
-        val artworkColor = playerBackgroundColor.value ?: theme.surfaceContainerHighest
+        val artworkColor: Color = playerBackgroundColor.value ?: theme.surfaceContainerHighest
 
         Box(
             modifier = Modifier
@@ -1031,16 +1035,16 @@ class MainActivity : AppCompatActivity() {
                     }
                     IconButton(
                         onClick = {
-                            if (isPlaying) viewModel.pauseAudio() else viewModel.playAudio()
+                            if (isPlaying.value) viewModel.pauseAudio() else viewModel.playAudio()
                         },
                         modifier = Modifier.size(56.dp)
                     ) {
                         Icon(
-                            imageVector = if (isPlaying)
+                            imageVector = if (isPlaying.value)
                                 androidx.compose.material.icons.Icons.Default.Pause
                             else
                                 androidx.compose.material.icons.Icons.Default.PlayArrow,
-                            contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
+                            contentDescription = if (isPlaying.value) stringResource(R.string.pause) else stringResource(R.string.play),
                             tint = theme.primary,
                             modifier = Modifier.size(32.dp)
                         )
