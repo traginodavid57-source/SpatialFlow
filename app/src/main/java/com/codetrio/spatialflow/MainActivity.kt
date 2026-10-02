@@ -36,6 +36,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.clip
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -526,17 +527,7 @@ class MainActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
-.drawBehind {
-                                    if (isBlurEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                                        val fraction = playerExpansionFractionState.value
-                                        if (fraction > 0.01f) {
-                                            drawRect(
-                                                color = androidx.compose.ui.graphics.Color.Black.copy(alpha = fraction * 0.6f),
-                                                size = Size(size.width, size.height)
-                                            )
-                                        }
-                                    }
-                                }
+// Simplified overlay without drawBehind/drawRect
                         ) {
                             val routeIndices = remember {
                                 mapOf(
