@@ -148,6 +148,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.codetrio.spatialflow.data.innertube.YouTubeMusic
 
+fun isUrl(text: String): Boolean {
+    return text.startsWith("http://") || text.startsWith("https://")
+}
+
 // ===== Shared Transition Locals =====
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -458,10 +462,6 @@ fun ExploreScreen(
                 isSearchActive = false
             }
         }
-    }
-
-    private fun isUrl(text: String): Boolean {
-        return text.startsWith("http://") || text.startsWith("https://")
     }
     val onSearchHeaderActiveChange = remember {
         { active: Boolean -> isSearchActive = active }

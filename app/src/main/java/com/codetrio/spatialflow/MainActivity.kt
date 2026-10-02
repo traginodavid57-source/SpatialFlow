@@ -69,6 +69,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -894,10 +895,9 @@ class MainActivity : AppCompatActivity() {
         onDismissPiP: () -> Unit
     ) {
         val context = LocalContext.current
-        val uiState = viewModel.uiState.collectAsStateWithLifecycle()
         val currentSong = viewModel.currentSong.collectAsStateWithLifecycle()
         val playerBackgroundColor = viewModel.playerBackgroundColor.collectAsStateWithLifecycle()
-        val isPlaying = uiState.value.isPlaying
+        val isPlaying = viewModel.isPlaying.collectAsStateWithLifecycle()
         val position = viewModel.currentPosition.collectAsStateWithLifecycle()
         val duration = viewModel.duration.collectAsStateWithLifecycle()
         val song = currentSong.value
