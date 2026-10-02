@@ -142,6 +142,8 @@
     <string name="drag_to_reorder">Arraste para reordenar</string>
     <string name="duration">Duração</string>
     <string name="dynamic_colors">Cores dinâmicas</string>
+    <string name="album_art_background_blur">Desfoque da arte do álbum no fundo</string>
+    <string name="blur_album_art_as_background_in_expanded_player">Desfocar arte do álbum como fundo no player expandido</string>
     <string name="dynamic_navbar">Barra de navegação dinâmica</string>
     <string name="dynamic_navbar_style">Estilo dinâmico da barra de navegação</string>
     <string name="edit_details">Editar detalhes</string>
