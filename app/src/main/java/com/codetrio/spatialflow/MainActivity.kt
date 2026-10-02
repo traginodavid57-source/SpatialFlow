@@ -37,7 +37,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
-import androidx.compose.foundation.drawWithContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,7 +53,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.Default
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -78,9 +76,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -528,12 +526,14 @@ class MainActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
-                                .drawWithContent {
-                                    drawContent()
+.drawBehind {
                                     if (isBlurEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                                         val fraction = playerExpansionFractionState.value
                                         if (fraction > 0.01f) {
-                                            drawRect(color = androidx.compose.ui.graphics.Color.Black.copy(alpha = fraction * 0.6f))
+                                            drawRect(
+                                                color = androidx.compose.ui.graphics.Color.Black.copy(alpha = fraction * 0.6f),
+                                                size = Size(size.width, size.height)
+                                            )
                                         }
                                     }
                                 }
