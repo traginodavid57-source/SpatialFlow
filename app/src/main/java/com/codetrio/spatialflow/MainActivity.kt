@@ -36,7 +36,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.clip
+import androidx.compose.foundation.layout.clip
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -907,7 +907,7 @@ class MainActivity : AppCompatActivity() {
         val duration = viewModel.duration.collectAsStateWithLifecycle()
         val song = currentSong.value
         val theme = MaterialTheme.colorScheme
-        val artworkColor: Color = playerBackgroundColor.value ?: theme.surfaceContainerHighest
+        val artworkColor: Color = (playerBackgroundColor.value as? Color) ?: theme.surfaceContainerHighest
 
         Box(
             modifier = Modifier
