@@ -36,7 +36,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.clip
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -933,7 +932,10 @@ class MainActivity : AppCompatActivity() {
                         modifier = Modifier
                             .size(120.dp)
                             .background(artworkColor, RoundedCornerShape(8.dp))
-                            .clip(RoundedCornerShape(8.dp))
+                            .graphicsLayer {
+                                clip = true
+                                shape = RoundedCornerShape(8.dp)
+                            }
                     ) {
                         Icon(
                             imageVector = MusicNote,
