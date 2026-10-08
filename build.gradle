@@ -2,8 +2,10 @@
 
 subprojects {
     // Configure Java 17 toolchain for all subprojects to avoid Gradle 9.5+ auto-provisioning issues
-    javaToolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-        vendor = "temurin"
+    afterEvaluate {
+        javaToolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+            vendor = "temurin"
+        }
     }
 }
