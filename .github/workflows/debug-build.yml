@@ -16,7 +16,6 @@ concurrency:
 
 env:
   ANDROID_API: '37'
-  GRADLE_OPTS: "-Dorg.gradle.jvm.toolchain.auto.provisioning=false"
 
 jobs:
   build-debug:
@@ -62,9 +61,7 @@ jobs:
           sdkmanager "platforms;android-${ANDROID_API}" > /dev/null 2>&1 || true
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
-        env:
-          GRADLE_OPTS: "-Dorg.gradle.jvm.toolchain.auto.provisioning=false"
+        run: ./gradlew assembleDebug --stacktrace -Dorg.gradle.jvm.toolchain.auto.provisioning=false
 
       - name: Prepare artifact
         run: |
@@ -105,15 +102,11 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run unit tests
-        run: ./gradlew testDebugUnitTest --continue
-        env:
-          GRADLE_OPTS: "-Dorg.gradle.jvm.toolchain.auto.provisioning=false"
+        run: ./gradlew testDebugUnitTest --continue -Dorg.gradle.jvm.toolchain.auto.provisioning=false
 
       - name: Run Android lint (debug)
         if: ${{ !cancelled() }}
-        run: ./gradlew lintDebug --continue
-        env:
-          GRADLE_OPTS: "-Dorg.gradle.jvm.toolchain.auto.provisioning=false"
+        run: ./gradlew lintDebug --continue -Dorg.gradle.jvm.toolchain.auto.provisioning=false
 
       - name: Upload reports
         if: ${{ !cancelled() }}
