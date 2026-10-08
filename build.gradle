@@ -1,0 +1,19 @@
+// Root build.gradle - configure Java toolchain for all subprojects
+
+plugins {
+    id("org.gradle.java.toolchain") apply false
+}
+
+// Configure Java 17 toolchain for all subprojects to avoid Gradle 9.5+ auto-provisioning issues
+javaToolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+    vendor = "temurin"
+}
+
+allprojects {
+    // Configure Java toolchain for all subprojects
+    javaToolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+        vendor = "temurin"
+    }
+}
