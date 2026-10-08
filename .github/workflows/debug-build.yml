@@ -16,6 +16,7 @@ concurrency:
 
 env:
   ANDROID_API: '37'
+  GRADLE_OPTS: "-Dorg.gradle.jvm.toolchain.auto.provisioning=false"
 
 jobs:
   build-debug:
@@ -62,6 +63,8 @@ jobs:
 
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvm.toolchain.auto.provisioning=false"
 
       - name: Prepare artifact
         run: |
@@ -103,10 +106,14 @@ jobs:
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --continue
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvm.toolchain.auto.provisioning=false"
 
       - name: Run Android lint (debug)
         if: ${{ !cancelled() }}
         run: ./gradlew lintDebug --continue
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvm.toolchain.auto.provisioning=false"
 
       - name: Upload reports
         if: ${{ !cancelled() }}
