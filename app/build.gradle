@@ -26,6 +26,11 @@ def myKeyPassword = localProps.getProperty('KEY_PASSWORD') ?: System.getenv("AND
 def isReleaseSigningReady = myKeystoreFile != null && myKeystorePassword != null && myKeyAlias != null && myKeyPassword != null
 
 android {
+    // Configure Java 17 toolchain to avoid Gradle 9.5+ auto-provisioning issues
+    javaToolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+        vendor = "temurin"
+    }
     namespace 'com.codetrio.spatialflow'
     compileSdk 37
 
